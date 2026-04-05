@@ -727,6 +727,7 @@ app.post('/api/db/tables', async (req, res) => {
 
 /**
  * POST /api/db/ddl - DDL 쿼리 실행 (CREATE, ALTER, DROP)
+ * 여러 개의 쿼리를 세미콜론으로 구분하여 실행 가능
  */
 app.post('/api/db/ddl', async (req, res) => {
     try {
@@ -739,34 +740,60 @@ app.post('/api/db/ddl', async (req, res) => {
             });
         }
 
-        const trimmedQuery = query.trim().toUpperCase();
+        // 여러 쿼리를 세미콜론으로 분리
+        const queries = query
+            .split(';')
+            .map(q => q.trim())
+            .filter(q => q.length > 0); // 빈 쿼리 제거
 
-        // DDL 쿼리만 허용 (CREATE, ALTER, DROP)
-        const allowedDDLs = ['CREATE', 'ALTER', 'DROP'];
-        const isAllowedDDL = allowedDDLs.some(ddl => trimmedQuery.startsWith(ddl));
-
-        if (!isAllowedDDL) {
+        if (queries.length === 0) {
             return res.status(400).json({
                 success: false,
-                error: 'Only CREATE, ALTER, and DROP statements are allowed in DDL'
+                error: 'No valid queries provided'
             });
         }
 
-        // 시스템 테이블 보호
-        if (trimmedQuery.includes('PG_') || trimmedQuery.includes('INFORMATION_SCHEMA')) {
-            return res.status(403).json({
-                success: false,
-                error: 'Cannot modify system tables'
-            });
+        // 각 쿼리 검증
+        for (const singleQuery of queries) {
+            const trimmedQuery = singleQuery.toUpperCase();
+
+            // DDL 쿼리만 허용 (CREATE, ALTER, DROP)
+            const allowedDDLs = ['CREATE', 'ALTER', 'DROP'];
+            const isAllowedDDL = allowedDDLs.some(ddl => trimmedQuery.startsWith(ddl));
+
+            if (!isAllowedDDL) {
+                return res.status(400).json({
+                    success: false,
+                    error: `Invalid query: Only CREATE, ALTER, and DROP statements are allowed. Got: ${trimmedQuery.substring(0, 30)}...`
+                });
+            }
+
+            // 시스템 테이블 보호
+            if (trimmedQuery.includes('PG_') || trimmedQuery.includes('INFORMATION_SCHEMA')) {
+                return res.status(403).json({
+                    success: false,
+                    error: 'Cannot modify system tables'
+                });
+            }
         }
 
-        // DDL 실행
-        await pool.query(query);
+        // 모든 쿼리 실행
+        const executedQueries = [];
+        for (const singleQuery of queries) {
+            try {
+                await pool.query(singleQuery);
+                executedQueries.push(singleQuery.substring(0, 50).toUpperCase() + '...');
+            } catch (error) {
+                console.error('❌ 쿼리 실행 오류:', singleQuery, error);
+                throw error;
+            }
+        }
 
         res.json({
             success: true,
-            message: 'DDL query executed successfully',
-            query: trimmedQuery.substring(0, 50) + '...'
+            message: `${executedQueries.length} DDL statement(s) executed successfully`,
+            queriesExecuted: executedQueries.length,
+            queries: executedQueries
         });
 
     } catch (error) {
@@ -780,6 +807,8 @@ app.post('/api/db/ddl', async (req, res) => {
             errorMessage = 'Table or object does not exist';
         } else if (error.code === '42601') {
             errorMessage = 'Syntax error in DDL statement';
+        } else if (error.code === '42809') {
+            errorMessage = 'Wrong object type (e.g., creating index on non-existent table)';
         }
 
         res.status(500).json({
