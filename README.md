@@ -190,6 +190,20 @@ PostgREST 개념을 쉽게 이해하는 학습 자료:
 - 설계 패턴 (Soft Delete, Audit Trail, 비정규화 등)
 - PostgREST 특수 고려사항 (뷰, RPC 함수)
 
+### 💾 데이터 유지 및 백업 가이드
+**`docs/DATA_PERSISTENCE_GUIDE.md`**
+
+데이터 유지와 백업 전략의 완벽한 가이드:
+- Named Volume vs Bind Mount 비교
+- 데이터 유지 원리 (컨테이너 삭제 시)
+- SQL 덤프를 통한 백업 (pg_dump)
+- 자동 백업 스크립트 (PowerShell + Task Scheduler)
+- 복구 방법 (부분 복구, 재해 복구)
+- 개발/프로덕션 환경 백업 전략
+- 클라우드 백업 (AWS S3 선택사항)
+- 백업 검증 및 정기 테스트
+- 문제 해결 (권한, 마이그레이션 등)
+
 ---
 
 ## 🎨 API 엔드포인트
