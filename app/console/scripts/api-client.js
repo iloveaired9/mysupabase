@@ -95,6 +95,13 @@ class APIClient {
   }
 
   /**
+   * Create new table
+   */
+  async createTable(tableName, columns) {
+    return this.request('POST', '/db/tables', { tableName, columns });
+  }
+
+  /**
    * Query Execution
    */
 

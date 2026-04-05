@@ -52,7 +52,12 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git remote:*)",
-      "Bash(grep -r mysuperbase docs/ README.md docker-compose.yml --include=*.md --include=*.yml)"
+      "Bash(grep -r mysuperbase docs/ README.md docker-compose.yml --include=*.md --include=*.yml)",
+      "Read(//c/rnd/claude/mysupabase/**)",
+      "Bash(__NEW_LINE_00ade6d9c63b477e__ chmod:*)",
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:5055)",
+      "Bash(curl -s http://localhost:3000/api/db/tables)"
     ]
   }
 }

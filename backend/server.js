@@ -629,6 +629,103 @@ app.post('/api/db/query', async (req, res) => {
 });
 
 /**
+ * POST /api/db/tables - 새로운 테이블 생성
+ */
+app.post('/api/db/tables', async (req, res) => {
+    try {
+        const { tableName, columns } = req.body;
+
+        // 테이블명 검증
+        if (!tableName || !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid table name. Must start with letter or underscore, contain only alphanumeric and underscores'
+            });
+        }
+
+        // 시스템 테이블 확인
+        if (tableName.startsWith('pg_') || tableName === 'information_schema') {
+            return res.status(403).json({
+                success: false,
+                error: 'Cannot create system tables'
+            });
+        }
+
+        // 컬럼 검증
+        if (!Array.isArray(columns) || columns.length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'At least one column is required'
+            });
+        }
+
+        // 컬럼 정의 생성
+        const columnDefs = [];
+        let hasPrimaryKey = false;
+
+        for (const col of columns) {
+            if (!col.name || !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(col.name)) {
+                return res.status(400).json({
+                    success: false,
+                    error: `Invalid column name: ${col.name}`
+                });
+            }
+
+            const type = col.type || 'TEXT';
+            const nullable = col.nullable !== false ? '' : ' NOT NULL';
+            const primaryKey = col.isPrimaryKey ? ' PRIMARY KEY' : '';
+            const defaultVal = col.default ? ` DEFAULT ${col.default}` : '';
+
+            if (col.isPrimaryKey) {
+                hasPrimaryKey = true;
+            }
+
+            columnDefs.push(`"${col.name}" ${type}${primaryKey}${nullable}${defaultVal}`);
+        }
+
+        // 자동 id 컬럼 추가 (primary key가 없으면)
+        let createTableSQL;
+        if (!hasPrimaryKey) {
+            createTableSQL = `CREATE TABLE "${tableName}" (
+                id SERIAL PRIMARY KEY,
+                ${columnDefs.join(',\n                ')},
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`;
+        } else {
+            createTableSQL = `CREATE TABLE "${tableName}" (
+                ${columnDefs.join(',\n                ')},
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`;
+        }
+
+        // 테이블 생성
+        await pool.query(createTableSQL);
+
+        res.json({
+            success: true,
+            message: `Table '${tableName}' created successfully`,
+            tableName: tableName
+        });
+
+    } catch (error) {
+        console.error('❌ 테이블 생성 오류:', error);
+
+        // PostgreSQL 중복 테이블 오류
+        if (error.code === '42P07') {
+            return res.status(400).json({
+                success: false,
+                error: 'Table already exists'
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to create table'
+        });
+    }
+});
+
+/**
  * 404 Not Found
  */
 app.use((req, res) => {

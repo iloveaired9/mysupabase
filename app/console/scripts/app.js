@@ -179,7 +179,7 @@ class ConsoleApp {
     const newTableBtn = document.getElementById('newTableBtn');
     if (newTableBtn) {
       newTableBtn.addEventListener('click', () => {
-        UIComponents.showToast('Create table feature coming soon', 'info');
+        this.showCreateTableModal();
       });
     }
   }
@@ -198,6 +198,80 @@ class ConsoleApp {
     } else {
       emptyState.style.display = 'flex';
       contentWrapper.style.display = 'none';
+    }
+  }
+
+  /**
+   * Show create table modal
+   */
+  showCreateTableModal() {
+    UIComponents.showModal('Create New Table');
+    const form = UIComponents.createTableForm();
+    const recordForm = document.getElementById('recordForm');
+    recordForm.innerHTML = '';
+    recordForm.appendChild(form);
+
+    // Add column button
+    document.getElementById('addColumnBtn').addEventListener('click', () => {
+      UIComponents.addColumnRow();
+    });
+
+    // Cancel button
+    document.getElementById('cancelCreateTableBtn').addEventListener('click', () => {
+      UIComponents.hideModal();
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await this.handleCreateTable();
+    });
+  }
+
+  /**
+   * Handle table creation
+   */
+  async handleCreateTable() {
+    const tableName = document.getElementById('tableName').value.trim();
+    const columnRows = document.querySelectorAll('.column-row');
+
+    if (!tableName) {
+      UIComponents.showToast('Table name is required', 'warning');
+      return;
+    }
+
+    // Collect column definitions
+    const columns = [];
+    columnRows.forEach(row => {
+      const name = row.querySelector('.col-name').value.trim();
+      const type = row.querySelector('.col-type').value;
+      const nullable = row.querySelector('.col-nullable').checked;
+      const isPrimaryKey = row.querySelector('.col-primary').checked;
+
+      if (!name) {
+        UIComponents.showToast('All column names are required', 'warning');
+        return;
+      }
+
+      columns.push({
+        name,
+        type,
+        nullable,
+        isPrimaryKey
+      });
+    });
+
+    if (columns.length === 0) return;
+
+    try {
+      const response = await apiClient.createTable(tableName, columns);
+      UIComponents.showToast(`Table '${tableName}' created successfully!`, 'success');
+      UIComponents.hideModal();
+
+      // Refresh table list
+      await tableManager.loadTableList();
+    } catch (error) {
+      UIComponents.showToast(`Error: ${error.message}`, 'error');
     }
   }
 

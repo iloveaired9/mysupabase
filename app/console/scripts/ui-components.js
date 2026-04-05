@@ -380,4 +380,111 @@ class UIComponents {
       return false;
     }
   }
+
+  /**
+   * Create table creation form
+   */
+  static createTableForm() {
+    const form = document.createElement('form');
+    form.className = 'modal-form';
+    form.id = 'createTableForm';
+
+    // Table name input
+    const nameGroup = document.createElement('div');
+    nameGroup.className = 'form-group';
+    nameGroup.innerHTML = `
+      <label for="tableName">Table Name *</label>
+      <input type="text" id="tableName" name="tableName" placeholder="e.g., users, products" required>
+      <small>Must start with letter or underscore, contain only alphanumeric and underscores</small>
+    `;
+    form.appendChild(nameGroup);
+
+    // Columns section
+    const columnsSection = document.createElement('div');
+    columnsSection.className = 'form-group';
+    columnsSection.innerHTML = `
+      <label>Columns *</label>
+      <div id="columnsContainer">
+        <!-- Columns will be added here -->
+      </div>
+      <button type="button" id="addColumnBtn" class="btn btn-secondary" style="margin-top: 10px;">
+        + Add Column
+      </button>
+    `;
+    form.appendChild(columnsSection);
+
+    // Add first column row
+    this.addColumnRow();
+
+    // Buttons
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '10px';
+    buttonGroup.style.marginTop = '20px';
+    buttonGroup.innerHTML = `
+      <button type="submit" class="btn btn-primary" style="flex: 1;">Create Table</button>
+      <button type="button" id="cancelCreateTableBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+    `;
+    form.appendChild(buttonGroup);
+
+    return form;
+  }
+
+  /**
+   * Add a column row to the table creation form
+   */
+  static addColumnRow(index = null) {
+    const container = document.getElementById('columnsContainer');
+    if (!container) return;
+
+    const idx = container.children.length;
+    const columnRow = document.createElement('div');
+    columnRow.className = 'column-row';
+    columnRow.style.display = 'grid';
+    columnRow.style.gridTemplateColumns = '1fr 1fr 1fr 1fr auto';
+    columnRow.style.gap = '8px';
+    columnRow.style.marginBottom = '10px';
+    columnRow.style.alignItems = 'center';
+
+    columnRow.innerHTML = `
+      <input type="text" placeholder="Column name" class="col-name" required>
+      <select class="col-type">
+        <option value="TEXT">TEXT</option>
+        <option value="INTEGER">INTEGER</option>
+        <option value="BIGINT">BIGINT</option>
+        <option value="NUMERIC">NUMERIC</option>
+        <option value="BOOLEAN">BOOLEAN</option>
+        <option value="TIMESTAMP">TIMESTAMP</option>
+        <option value="DATE">DATE</option>
+        <option value="UUID">UUID</option>
+      </select>
+      <label style="display: flex; align-items: center; gap: 4px;">
+        <input type="checkbox" class="col-nullable" checked>
+        Nullable
+      </label>
+      <label style="display: flex; align-items: center; gap: 4px;">
+        <input type="checkbox" class="col-primary">
+        Primary Key
+      </label>
+      <button type="button" class="btn-delete-col" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">×</button>
+    `;
+
+    const deleteBtn = columnRow.querySelector('.btn-delete-col');
+    deleteBtn.addEventListener('click', () => {
+      columnRow.remove();
+      // Disable delete if only one column left
+      const rows = container.querySelectorAll('.column-row');
+      rows.forEach(row => {
+        row.querySelector('.btn-delete-col').disabled = rows.length === 1;
+      });
+    });
+
+    container.appendChild(columnRow);
+
+    // Disable delete if only one column
+    const rows = container.querySelectorAll('.column-row');
+    rows.forEach(row => {
+      row.querySelector('.btn-delete-col').disabled = rows.length === 1;
+    });
+  }
 }
