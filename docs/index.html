@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="여러 온라인 커뮤니티의 인기글을 모아서 한 곳에서 볼 수 있는 PostgREST API 문서" />
+    <meta name="theme-color" content="#0066cc" />
+
+    <title>커뮤니티 인기글 모아보기 - API 문서</title>
+
+    <!-- Swagger UI 기본 CSS -->
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
+
+    <!-- 프로젝트 커스텀 CSS (브랜드 색상, 폰트) -->
+    <link rel="stylesheet" type="text/css" href="./swagger-ui-custom.css" />
+
+    <!-- Google Fonts (고급 폰트) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://fastapi.tiangolo.com/img/favicon.png" sizes="32x32" />
+
+    <style>
+      html {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+
+      body {
+        margin: 0;
+        background: #fafafa;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+          'Cantarell', sans-serif;
+      }
+
+      /* 페이지 로딩 시 스피너 */
+      .loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+      }
+
+      .loader {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loader-text {
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Swagger UI가 렌더링될 div -->
+    <div id="swagger-ui"></div>
+
+    <!-- Swagger UI 번들 JavaScript -->
+    <script src="./swagger-ui-bundle.js" charset="UTF-8"></script>
+    <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"></script>
+
+    <!-- Swagger UI 초기화 및 설정 -->
+    <script>
+      window.onload = function () {
+        // Swagger UI 설정
+        const ui = SwaggerUIBundle({
+          // API 스펙 파일 경로
+          url: '/swagger.json',
+
+          // DOM 요소 ID
+          dom_id: '#swagger-ui',
+
+          // 사전 설정 (Presets)
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset
+          ],
+
+          // 플러그인
+          plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl
+          ],
+
+          // 레이아웃 (StandaloneLayout 사용)
+          layout: 'StandaloneLayout',
+
+          // 깊은 링킹 활성화 (북마크 가능)
+          deepLinking: true,
+
+          // 기본 모델 확장 상태
+          defaultModelsExpandDepth: 1,
+
+          // 응답 모델 확장 상태
+          defaultModelExpandDepth: 1,
+
+          // 요청 응답 보기 설정
+          showRequestHeaders: true,
+          showOperationFilterTag: true,
+
+          // 필터링 활성화
+          tryItOutEnabled: true,
+
+          // 요청/응답 표시
+          requestSnippetsEnabled: true,
+
+          // 응답 예제 필터
+          responseInterceptor: (response) => {
+            // 응답 인터셉트 로직 (필요시 추가)
+            return response;
+          },
+
+          // 요청 인터셉트
+          requestInterceptor: (request) => {
+            // 요청 인터셉트 로직 (필요시 추가)
+            return request;
+          }
+        });
+
+        // Swagger UI 인스턴스를 전역 변수로 저장
+        window.ui = ui;
+
+        // 서버 목록 추가 (선택사항)
+        // ui.presets.setServers([
+        //   { url: 'http://localhost:3001', description: '로컬 개발 서버' },
+        //   { url: 'https://api.example.com', description: '프로덕션 서버' }
+        // ]);
+
+        // 초기 엔드포인트 확장 (선택사항)
+        // setTimeout(() => {
+        //   document.querySelector('[id="operations-Posts-getPosts"]').click();
+        // }, 500);
+      };
+    </script>
+
+    <!-- 선택적: Stickybits 스크립트 (sticky 네비게이션용) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/stickybits@3.7.10/dist/stickybits.umd.js"
+      integrity="sha256-kvfMvqzQe3gW9mQjVp2EwWaS7hLfZJM1XKDW6QRFJ0="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- 분석 추적 (선택사항) -->
+    <script>
+      // Google Analytics 또는 다른 분석 도구 설정
+      // (필요에 따라 추가)
+    </script>
+  </body>
+</html>

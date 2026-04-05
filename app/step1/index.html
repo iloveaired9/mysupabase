@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티 인기글 모아보기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">🔥 핫글 모아보기</h1>
+            <p class="tagline">커뮤니티의 인기글을 한 곳에서!</p>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h3>카테고리</h3>
+                <div class="category-list">
+                    <button class="category-btn active" data-category="all">
+                        📌 전체
+                    </button>
+                    <button class="category-btn" data-category="tech">
+                        💻 기술
+                    </button>
+                    <button class="category-btn" data-category="news">
+                        📰 뉴스
+                    </button>
+                    <button class="category-btn" data-category="entertainment">
+                        🎬 연예
+                    </button>
+                    <button class="category-btn" data-category="sports">
+                        ⚽ 스포츠
+                    </button>
+                    <button class="category-btn" data-category="life">
+                        🏠 일상
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>정렬</h3>
+                <div class="sort-list">
+                    <button class="sort-btn active" data-sort="latest">
+                        🕐 최신순
+                    </button>
+                    <button class="sort-btn" data-sort="likes">
+                        👍 추천순
+                    </button>
+                    <button class="sort-btn" data-sort="comments">
+                        💬 댓글순
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 검색 바 -->
+            <div class="search-bar">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="게시글 검색..."
+                >
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <!-- 게시글 그리드 -->
+            <div class="posts-grid">
+                <!-- 게시글 카드 1 -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="category-badge tech">기술</span>
+                        <span class="source-badge">Reddit</span>
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="#" target="_blank">
+                            혁신적인 AI 모델이 2024년 기술 판도를 바꿀 예정
+                        </a>
+                    </h2>
+
+                    <p class="post-excerpt">
+                        새로운 AI 모델이 출시되면서 기술 산업에 큰 변화가 예상되고 있습니다.
+                        전문가들은 이것이 게임체인저가 될 것이라고 평가하고 있습니다...
+                    </p>
+
+                    <div class="post-stats">
+                        <span class="stat">👍 <strong>1,245</strong></span>
+                        <span class="stat">💬 <strong>342</strong></span>
+                        <span class="post-date">2 시간 전</span>
+                    </div>
+                </article>
+
+                <!-- 게시글 카드 2 -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="category-badge entertainment">연예</span>
+                        <span class="source-badge">Naver</span>
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="#" target="_blank">
+                            유명 배우의 깜짝 영화 출연 발표로 팬들 열광
+                        </a>
+                    </h2>
+
+                    <p class="post-excerpt">
+                        전 국민의 사랑을 받은 배우가 예상치 못한 영화 출연을 발표해
+                        팬들이 환호하고 있습니다. 영화 개봉은 내년 상반기...
+                    </p>
+
+                    <div class="post-stats">
+                        <span class="stat">👍 <strong>2,891</strong></span>
+                        <span class="stat">💬 <strong>758</strong></span>
+                        <span class="post-date">3 시간 전</span>
+                    </div>
+                </article>
+
+                <!-- 게시글 카드 3 -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="category-badge sports">스포츠</span>
+                        <span class="source-badge">ESPN</span>
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="#" target="_blank">
+                            국가대표팀 예상 밖의 역대급 승리로 국민 들썩
+                        </a>
+                    </h2>
+
+                    <p class="post-excerpt">
+                        국가대표팀이 세계 강호를 상대로 역대급 승리를 거두었습니다.
+                        경기 후 선수들의 모습과 팬들의 반응이 화제입니다...
+                    </p>
+
+                    <div class="post-stats">
+                        <span class="stat">👍 <strong>5,432</strong></span>
+                        <span class="stat">💬 <strong>1,200</strong></span>
+                        <span class="post-date">1 시간 전</span>
+                    </div>
+                </article>
+
+                <!-- 게시글 카드 4 -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="category-badge news">뉴스</span>
+                        <span class="source-badge">BBC</span>
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="#" target="_blank">
+                            세계 경제 전문가들 내년 경기 회복 전망 제시
+                        </a>
+                    </h2>
+
+                    <p class="post-excerpt">
+                        국제경제기구가 내년 경기 회복을 전망했습니다.
+                        전문가들은 긍정적인 신호들이 나타나고 있다고 분석합니다...
+                    </p>
+
+                    <div class="post-stats">
+                        <span class="stat">👍 <strong>892</strong></span>
+                        <span class="stat">💬 <strong>234</strong></span>
+                        <span class="post-date">4 시간 전</span>
+                    </div>
+                </article>
+
+                <!-- 게시글 카드 5 -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="category-badge life">일상</span>
+                        <span class="source-badge">Medium</span>
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="#" target="_blank">
+                            생산성을 높이는 5가지 간단한 습관
+                        </a>
+                    </h2>
+
+                    <p class="post-excerpt">
+                        성공한 사람들의 공통점은 무엇일까요?
+                        오늘은 일상 생산성을 높이는 실용적인 팁들을 소개합니다...
+                    </p>
+
+                    <div class="post-stats">
+                        <span class="stat">👍 <strong>3,120</strong></span>
+                        <span class="stat">💬 <strong>567</strong></span>
+                        <span class="post-date">5 시간 전</span>
+                    </div>
+                </article>
+
+                <!-- 게시글 카드 6 -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="category-badge tech">기술</span>
+                        <span class="source-badge">HN</span>
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="#" target="_blank">
+                            오픈소스 커뮤니티가 선택한 올해의 최고 프로젝트들
+                        </a>
+                    </h2>
+
+                    <p class="post-excerpt">
+                        2024년 오픈소스 커뮤니티를 뜨겁게 달군 프로젝트들을 소개합니다.
+                        개발자들에게 큰 도움이 될 것들ばかり입니다...
+                    </p>
+
+                    <div class="post-stats">
+                        <span class="stat">👍 <strong>4,567</strong></span>
+                        <span class="stat">💬 <strong>890</strong></span>
+                        <span class="post-date">6 시간 전</span>
+                    </div>
+                </article>
+            </div>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <button class="pagination-btn" disabled>← 이전</button>
+                <span class="page-info">페이지 1 / 10</span>
+                <button class="pagination-btn">다음 →</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <p>&copy; 2024 커뮤니티 인기글 모아보기. 모든 게시글은 원문 출처의 저작권을 존중합니다.</p>
+    </footer>
+</body>
+</html>

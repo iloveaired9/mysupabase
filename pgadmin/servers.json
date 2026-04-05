@@ -1,0 +1,16 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "supabase-local",
+      "Group": "Local",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "supabase",
+      "Username": "supabase",
+      "Password": "postgres",
+      "SSLMode": "prefer",
+      "Shared": false,
+      "Comment": "Local Supabase PostgreSQL"
+    }
+  }
+}

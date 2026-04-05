@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티 인기글 모아보기 - Step 5 (최종 완성)</title>
+    <link rel="stylesheet" href="../step1/style.css">
+    <style>
+        /* Step 5 추가 스타일 */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background-color: #ffe6e6;
+            color: #cc0000;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #cc0000;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            background: #4ecdc4;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        .api-status.error {
+            background: #ff6b6b;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .api-status.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">🔥 핫글 모아보기</h1>
+            <p class="tagline">커뮤니티의 인기글을 한 곳에서! (Step 5: 실시간 데이터)</p>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h3>카테고리</h3>
+                <div class="category-list">
+                    <button class="category-btn active" data-category="all">
+                        📌 전체
+                    </button>
+                    <button class="category-btn" data-category="tech">
+                        💻 기술
+                    </button>
+                    <button class="category-btn" data-category="news">
+                        📰 뉴스
+                    </button>
+                    <button class="category-btn" data-category="entertainment">
+                        🎬 연예
+                    </button>
+                    <button class="category-btn" data-category="sports">
+                        ⚽ 스포츠
+                    </button>
+                    <button class="category-btn" data-category="life">
+                        🏠 일상
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>정렬</h3>
+                <div class="sort-list">
+                    <button class="sort-btn active" data-sort="latest">
+                        🕐 최신순
+                    </button>
+                    <button class="sort-btn" data-sort="likes">
+                        👍 추천순
+                    </button>
+                    <button class="sort-btn" data-sort="comments">
+                        💬 댓글순
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 통계 섹션 -->
+            <div class="stats-section" id="statsSection" style="display: none;">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalPosts">-</div>
+                    <div class="stat-label">전체 게시글</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="avgLikes">-</div>
+                    <div class="stat-label">평균 추천수</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="maxLikes">-</div>
+                    <div class="stat-label">최고 추천수</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="avgComments">-</div>
+                    <div class="stat-label">평균 댓글수</div>
+                </div>
+            </div>
+
+            <!-- 에러 메시지 -->
+            <div class="error-message" id="errorMessage"></div>
+
+            <!-- 검색 바 -->
+            <div class="search-bar">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="게시글 검색... (제목, 내용)"
+                >
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <!-- 로딩 표시 -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>데이터를 불러오는 중...</p>
+            </div>
+
+            <!-- 게시글 그리드 -->
+            <div class="posts-grid" id="postsGrid">
+                <!-- 동적으로 생성됨 -->
+            </div>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <button class="pagination-btn" id="prevBtn" disabled>← 이전</button>
+                <span class="page-info" id="pageInfo">페이지 1 / 1</span>
+                <button class="pagination-btn" id="nextBtn">다음 →</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <p>&copy; 2024 커뮤니티 인기글 모아보기 - Step 5 (실시간 API 데이터)</p>
+    </footer>
+
+    <!-- API 상태 표시 -->
+    <div class="api-status hidden" id="apiStatus">
+        🔗 API 연결됨
+    </div>
+
+    <!-- JavaScript 파일 로드 -->
+    <script src="app.js"></script>
+</body>
+</html>

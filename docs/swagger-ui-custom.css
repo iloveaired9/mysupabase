@@ -1,0 +1,612 @@
+/* ============================================
+   🎨 Swagger UI 커스텀 스타일시트
+   프로젝트 브랜드 색상 및 폰트 적용
+   ============================================ */
+
+/* 1. CSS 변수 정의 - 프로젝트 브랜드 팔레트 */
+:root {
+  /* 주요 색상 */
+  --color-primary: #0066cc;
+  --color-primary-dark: #0052a3;
+  --color-primary-light: #e6f0ff;
+
+  /* 배경 및 텍스트 */
+  --color-dark: #1a1a1a;
+  --color-light: #f5f5f5;
+  --color-white: #ffffff;
+  --color-text: #333333;
+  --color-text-light: #666666;
+  --color-border: #ddd;
+
+  /* 메서드 색상 */
+  --color-get: #0066cc;
+  --color-post: #28a745;
+  --color-put: #ffc107;
+  --color-delete: #dc3545;
+
+  /* 폰트 */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-family-mono: 'Roboto Mono', 'Courier New', monospace;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+}
+
+/* 2. 글로벌 스타일 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background-color: var(--color-white);
+  line-height: 1.6;
+}
+
+/* 3. 상단 바 (TopBar) 스타일링 */
+.swagger-ui .topbar {
+  background: linear-gradient(to right, var(--color-dark), #222);
+  border-bottom: 3px solid var(--color-primary);
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.swagger-ui .topbar a {
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.swagger-ui .topbar a:hover {
+  text-decoration: underline;
+}
+
+.swagger-ui .topbar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.swagger-ui .topbar-wrapper img[alt="Swagger UI"] {
+  height: 32px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+/* 4. 정보 섹션 (Info Section) */
+.swagger-ui .info {
+  margin: 30px 0;
+}
+
+.swagger-ui .info .title {
+  color: var(--color-primary);
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  margin: 15px 0;
+  letter-spacing: -0.5px;
+}
+
+.swagger-ui .info .title small:last-child {
+  background-color: var(--color-light);
+  border-radius: 4px;
+  color: var(--color-text-light);
+  padding: 4px 8px;
+  font-size: 12px;
+  margin-left: 10px;
+  font-weight: var(--font-weight-normal);
+  letter-spacing: normal;
+}
+
+.swagger-ui .info .description {
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+.swagger-ui .info .contact {
+  margin: 15px 0;
+  font-size: 13px;
+}
+
+/* 5. 작업 그룹 태그 (OpBlock Tags) */
+.swagger-ui .opblock-tag {
+  background-color: var(--color-light);
+  border-left: 4px solid var(--color-primary);
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.swagger-ui .opblock-tag:hover {
+  background-color: #ececec;
+  border-left-color: var(--color-primary-dark);
+}
+
+/* 6. 작업 블록 (OpBlock) */
+.swagger-ui .opblock {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  margin: 10px 0;
+  background-color: var(--color-white);
+  transition: all 0.2s ease;
+}
+
+.swagger-ui .opblock:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 7. 메서드별 색상 */
+
+/* GET */
+.swagger-ui .opblock.opblock-get {
+  border-color: var(--color-get);
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+  background-color: var(--color-get);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  border-radius: 4px;
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary {
+  border-color: var(--color-get);
+}
+
+/* POST */
+.swagger-ui .opblock.opblock-post {
+  border-color: var(--color-post);
+}
+
+.swagger-ui .opblock.opblock-post .opblock-summary-method {
+  background-color: var(--color-post);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  border-radius: 4px;
+}
+
+.swagger-ui .opblock.opblock-post .opblock-summary {
+  border-color: var(--color-post);
+}
+
+/* PUT */
+.swagger-ui .opblock.opblock-put {
+  border-color: var(--color-put);
+}
+
+.swagger-ui .opblock.opblock-put .opblock-summary-method {
+  background-color: var(--color-put);
+  color: #333;
+  font-weight: var(--font-weight-bold);
+  border-radius: 4px;
+}
+
+.swagger-ui .opblock.opblock-put .opblock-summary {
+  border-color: var(--color-put);
+}
+
+/* DELETE */
+.swagger-ui .opblock.opblock-delete {
+  border-color: var(--color-delete);
+}
+
+.swagger-ui .opblock.opblock-delete .opblock-summary-method {
+  background-color: var(--color-delete);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  border-radius: 4px;
+}
+
+.swagger-ui .opblock.opblock-delete .opblock-summary {
+  border-color: var(--color-delete);
+}
+
+/* PATCH */
+.swagger-ui .opblock.opblock-patch {
+  border-color: #8b4789;
+}
+
+.swagger-ui .opblock.opblock-patch .opblock-summary-method {
+  background-color: #8b4789;
+  color: white;
+}
+
+/* 8. 버튼 스타일 */
+.swagger-ui button {
+  font-family: var(--font-family);
+  border-radius: 4px;
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+}
+
+.swagger-ui button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.swagger-ui button:active {
+  transform: translateY(0);
+}
+
+/* Try it out 버튼 */
+.swagger-ui .try-out > button {
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.swagger-ui .try-out > button:hover {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+/* Execute 버튼 */
+.swagger-ui .execute {
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: white;
+  padding: 8px 16px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.swagger-ui .execute:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* Cancel 버튼 */
+.swagger-ui .scheme-container .btn.cancel {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+/* 9. 입력 필드 */
+.swagger-ui input[type="text"],
+.swagger-ui input[type="password"],
+.swagger-ui input[type="email"],
+.swagger-ui select,
+.swagger-ui textarea {
+  font-family: var(--font-family);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 13px;
+  transition: border-color 0.2s ease;
+}
+
+.swagger-ui input[type="text"]:focus,
+.swagger-ui input[type="password"]:focus,
+.swagger-ui input[type="email"]:focus,
+.swagger-ui select:focus,
+.swagger-ui textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* 10. 파라미터 섹션 */
+.swagger-ui .parameters-wrapper {
+  background-color: var(--color-light);
+  padding: 15px;
+  border-radius: 4px;
+  margin: 15px 0;
+}
+
+.swagger-ui .parameters-wrapper h4 {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 15px 0;
+  font-size: 14px;
+}
+
+.swagger-ui .parameter__in {
+  color: var(--color-text-light);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+/* 11. 스키마 및 모델 */
+.swagger-ui .model {
+  background-color: var(--color-light);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 4px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.swagger-ui .model-box {
+  background-color: var(--color-light);
+  border-left: 3px solid var(--color-primary);
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.swagger-ui .model-title {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: 14px;
+}
+
+/* 12. 응답 섹션 */
+.swagger-ui .responses-inner {
+  margin: 15px 0;
+}
+
+.swagger-ui .response {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  margin: 10px 0;
+  background-color: var(--color-white);
+}
+
+.swagger-ui .response-col_status {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.swagger-ui .response-col_status.success {
+  color: var(--color-post);
+}
+
+/* 13. 코드 블록 */
+.swagger-ui pre {
+  background-color: #f4f4f4;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.swagger-ui code {
+  font-family: var(--font-family-mono);
+  color: #e83e8c;
+  background-color: #f4f4f4;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.swagger-ui pre > code {
+  color: #333;
+  background-color: transparent;
+  padding: 0;
+}
+
+/* 14. 모달 및 다이얼로그 */
+.swagger-ui .dialog-ux {
+  background-color: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.swagger-ui .dialog-ux .modal-ux-header {
+  background: linear-gradient(to right, var(--color-dark), #222);
+  border-bottom: 2px solid var(--color-primary);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px 8px 0 0;
+}
+
+/* 15. 스크롤 바 (WebKit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* 16. 레이아웃 및 여백 */
+.swagger-ui .topbar-wrapper .topbar-title {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: white;
+}
+
+.swagger-ui .scheme-container {
+  padding: 20px;
+  background-color: var(--color-light);
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+/* 17. 반응형 스타일 (태블릿) */
+@media (max-width: 768px) {
+  .swagger-ui .info .title {
+    font-size: 24px;
+  }
+
+  .swagger-ui .opblock-tag {
+    padding: 10px 12px;
+  }
+
+  .swagger-ui button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .swagger-ui pre {
+    font-size: 11px;
+    padding: 10px;
+  }
+}
+
+/* 18. 반응형 스타일 (모바일) */
+@media (max-width: 576px) {
+  .swagger-ui .topbar {
+    padding: 10px 15px;
+  }
+
+  .swagger-ui .info .title {
+    font-size: 20px;
+  }
+
+  .swagger-ui .info .title small:last-child {
+    display: block;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .swagger-ui .opblock-tag {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .swagger-ui .opblock-summary {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .swagger-ui .parameters-wrapper {
+    padding: 10px;
+  }
+
+  .swagger-ui pre {
+    font-size: 10px;
+    padding: 8px;
+  }
+}
+
+/* 19. 다크모드 지원 (선택) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-dark: #0d1117;
+    --color-light: #161b22;
+    --color-text: #c9d1d9;
+    --color-text-light: #8b949e;
+    --color-border: #30363d;
+  }
+
+  body {
+    background-color: var(--color-dark);
+    color: var(--color-text);
+  }
+
+  .swagger-ui .info .title {
+    color: #58a6ff;
+  }
+
+  .swagger-ui pre {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    border-color: var(--color-border);
+  }
+
+  .swagger-ui code {
+    background-color: #0d1117;
+    color: #d2d2d2;
+  }
+}
+
+/* 20. 유틸리티 클래스 */
+.swagger-ui .hide {
+  display: none !important;
+}
+
+.swagger-ui .no-scroll {
+  overflow: hidden !important;
+}
+
+/* ============================================
+   마크다운 스타일링 (description 필드용)
+   ============================================ */
+
+.swagger-ui .opblock-description {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.swagger-ui .opblock-description h2,
+.swagger-ui .opblock-description h3,
+.swagger-ui .opblock-description h4 {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  margin: 10px 0 5px 0;
+  font-size: 14px;
+}
+
+.swagger-ui .opblock-description h2 {
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.swagger-ui .opblock-description ul,
+.swagger-ui .opblock-description ol {
+  margin: 8px 0 8px 20px;
+  padding: 0;
+}
+
+.swagger-ui .opblock-description li {
+  margin: 4px 0;
+}
+
+.swagger-ui .opblock-description strong {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.swagger-ui .opblock-description em {
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.swagger-ui .opblock-description code {
+  background-color: #f4f4f4;
+  color: #d73a49;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.swagger-ui .opblock-description blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 12px;
+  color: var(--color-text-light);
+  margin: 10px 0;
+  font-style: italic;
+}
+
+.swagger-ui .opblock-description table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.swagger-ui .opblock-description table th {
+  background-color: var(--color-light);
+  border: 1px solid var(--color-border);
+  padding: 8px;
+  text-align: left;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.swagger-ui .opblock-description table td {
+  border: 1px solid var(--color-border);
+  padding: 8px;
+}
+
+.swagger-ui .opblock-description table tr:nth-child(even) {
+  background-color: var(--color-light);
+}

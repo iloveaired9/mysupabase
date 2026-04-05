@@ -1,0 +1,19 @@
+{
+  "name": "mysupabase",
+  "version": "1.0.0",
+  "description": "Docker를 사용하여 완벽하게 자체 호스팅된 Supabase 환경입니다. PostgreSQL + Auth 기능을 제공하는 팀 개발용 스택입니다.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
+}

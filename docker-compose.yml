@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 데이터베이스
+  postgres:
+    container_name: supabase-postgres
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-supabase}
+      POSTGRES_USER: ${POSTGRES_USER:-supabase}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    networks:
+      - supabase-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-supabase}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Mail 서버 (개발용 - MailHog)
+  mailhog:
+    container_name: supabase-mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - supabase-net
+    restart: unless-stopped
+
+  # pgAdmin (선택사항 - DB 관리)
+  pgadmin:
+    container_name: supabase-pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+    networks:
+      - supabase-net
+    restart: unless-stopped
+
+  # PostgREST - 자동 REST API 생성 (스키마 기반)
+  postgrest:
+    container_name: supabase-postgrest
+    image: postgrest/postgrest:latest
+    environment:
+      PGRST_DB_URI: postgresql://${POSTGRES_USER:-supabase}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-supabase}
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: anon
+      # PGRST_JWT_SECRET: 초기에는 생략 (인증 없음)
+      PGRST_LOG_LEVEL: info
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - supabase-net
+    restart: unless-stopped
+
+  # Swagger UI - API 문서 시각화 (커스텀 CSS 및 브랜드 적용)
+  swagger-ui:
+    container_name: supabase-swagger-ui
+    image: swaggerapi/swagger-ui:latest
+    environment:
+      # OpenAPI 스펙 파일 경로
+      SWAGGER_JSON: /swagger.json
+      # 또는 PostgREST 자동 생성 스펙 사용
+      # SWAGGER_JSON_URL: http://postgrest:3000/
+    ports:
+      - "8080:8080"
+    volumes:
+      # docs 디렉토리 전체 마운트 (swagger.json, index.html, CSS, 자산)
+      - ./docs:/usr/share/nginx/html
+    depends_on:
+      - postgrest
+    networks:
+      - supabase-net
+    restart: unless-stopped
+
+networks:
+  supabase-net:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
+  pgadmin-data:
+    driver: local

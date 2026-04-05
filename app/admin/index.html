@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 서비스 관리자 대시보드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .service-icon {
+            font-size: 2rem;
+        }
+
+        .service-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .service-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4caf50;
+            margin-left: auto;
+        }
+
+        .service-details {
+            margin-bottom: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .detail-credentials {
+            background: #fff3cd;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.3rem 0;
+        }
+
+        .credential-label {
+            color: #856404;
+            font-weight: 500;
+        }
+
+        .credential-value {
+            color: #333;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-weight: 600;
+            background: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #667eea;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            color: #1565c0;
+            font-size: 0.95rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-online {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status-offline {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🔧 커뮤니티 핫포스트 관리 대시보드</h1>
+            <p>모든 서비스에 한 번에 접근하세요</p>
+        </div>
+
+        <!-- API 및 개발 서비스 -->
+        <div class="section">
+            <h2 class="section-title">🚀 API & 개발 서비스</h2>
+            <div class="services-grid">
+                <!-- PostgREST API -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">📡</div>
+                        <div class="service-name">PostgREST API</div>
+                        <div class="service-status"></div>
+                    </div>
+                    <div class="service-details">
+                        <div class="detail-row">
+                            <span class="detail-label">포트:</span>
+                            <span class="detail-value">3001</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">프로토콜:</span>
+                            <span class="detail-value">HTTP REST</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">스키마 기반:</span>
+                            <span class="detail-value">자동 생성</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="http://localhost:3001/posts?limit=1" class="btn btn-primary" target="_blank">API 테스트</a>
+                        <a href="http://localhost:3001/" class="btn btn-secondary" target="_blank">스펙 보기</a>
+                    </div>
+                </div>
+
+                <!-- Swagger UI -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">🎨</div>
+                        <div class="service-name">Swagger UI</div>
+                        <div class="service-status"></div>
+                    </div>
+                    <div class="service-details">
+                        <div class="detail-row">
+                            <span class="detail-label">포트:</span>
+                            <span class="detail-value">8080</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">타입:</span>
+                            <span class="detail-value">인터랙티브 문서</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">기능:</span>
+                            <span class="detail-value">API 테스트</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="http://localhost:8080" class="btn btn-primary" target="_blank">Swagger UI 열기</a>
+                    </div>
+                </div>
+
+                <!-- 프론트엔드 앱 -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">🌐</div>
+                        <div class="service-name">프론트엔드 앱</div>
+                        <div class="service-status"></div>
+                    </div>
+                    <div class="service-details">
+                        <div class="detail-row">
+                            <span class="detail-label">포트:</span>
+                            <span class="detail-value">5500</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">프로토콜:</span>
+                            <span class="detail-value">Python HTTP</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">버전:</span>
+                            <span class="detail-value">Step 5</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="http://localhost:5500/step5/" class="btn btn-primary" target="_blank">앱 보기</a>
+                        <a href="http://localhost:5500/step1/" class="btn btn-secondary" target="_blank">Step1</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 데이터베이스 & 관리 서비스 -->
+        <div class="section">
+            <h2 class="section-title">🗄️ 데이터베이스 & 관리 서비스</h2>
+            <div class="services-grid">
+                <!-- PostgreSQL -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">🐘</div>
+                        <div class="service-name">PostgreSQL</div>
+                        <div class="service-status"></div>
+                    </div>
+                    <div class="service-details">
+                        <div class="detail-row">
+                            <span class="detail-label">포트:</span>
+                            <span class="detail-value">5432</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">호스트:</span>
+                            <span class="detail-value">localhost</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">데이터베이스:</span>
+                            <span class="detail-value">supabase</span>
+                        </div>
+                    </div>
+                    <div class="detail-credentials">
+                        <div class="credential-item">
+                            <span class="credential-label">User:</span>
+                            <span class="credential-value">supabase</span>
+                            <button class="copy-btn" onclick="copyToClipboard('supabase', this)">복사</button>
+                        </div>
+                        <div class="credential-item">
+                            <span class="credential-label">Password:</span>
+                            <span class="credential-value">postgres</span>
+                            <button class="copy-btn" onclick="copyToClipboard('postgres', this)">복사</button>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <span class="btn btn-success" style="flex: 1; cursor: default;">pgAdmin으로 관리</span>
+                    </div>
+                </div>
+
+                <!-- pgAdmin -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">👨‍💼</div>
+                        <div class="service-name">pgAdmin</div>
+                        <div class="service-status"></div>
+                    </div>
+                    <div class="service-details">
+                        <div class="detail-row">
+                            <span class="detail-label">포트:</span>
+                            <span class="detail-value">5050</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">타입:</span>
+                            <span class="detail-value">DB 관리 UI</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">버전:</span>
+                            <span class="detail-value">Latest</span>
+                        </div>
+                    </div>
+                    <div class="detail-credentials">
+                        <div class="credential-item">
+                            <span class="credential-label">Email:</span>
+                            <span class="credential-value">admin@admin.com</span>
+                            <button class="copy-btn" onclick="copyToClipboard('admin@admin.com', this)">복사</button>
+                        </div>
+                        <div class="credential-item">
+                            <span class="credential-label">Password:</span>
+                            <span class="credential-value">admin</span>
+                            <button class="copy-btn" onclick="copyToClipboard('admin', this)">복사</button>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="http://localhost:5050" class="btn btn-primary" target="_blank">pgAdmin 열기</a>
+                    </div>
+                </div>
+
+                <!-- MailHog -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">📧</div>
+                        <div class="service-name">MailHog</div>
+                        <div class="service-status"></div>
+                    </div>
+                    <div class="service-details">
+                        <div class="detail-row">
+                            <span class="detail-label">포트 (Web):</span>
+                            <span class="detail-value">8025</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">포트 (SMTP):</span>
+                            <span class="detail-value">1025</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">타입:</span>
+                            <span class="detail-value">이메일 테스트</span>
+                        </div>
+                    </div>
+                    <div class="detail-credentials">
+                        <div class="credential-item">
+                            <span class="credential-label">인증:</span>
+                            <span class="credential-value">불필요</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="http://localhost:8025" class="btn btn-primary" target="_blank">MailHog 열기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문서 & 리소스 -->
+        <div class="section">
+            <h2 class="section-title">📚 문서 & 리소스</h2>
+            <div class="services-grid">
+                <!-- API 가이드 -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">📖</div>
+                        <div class="service-name">API 가이드</div>
+                    </div>
+                    <div class="service-details">
+                        <p style="font-size: 0.95rem; color: #666;">
+                            REST API 사용 방법, 쿼리 예제, JavaScript 코드 샘플을 포함한 상세 가이드
+                        </p>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="../../docs/API_GUIDE.md" class="btn btn-primary" target="_blank">가이드 보기</a>
+                    </div>
+                </div>
+
+                <!-- Swagger JSON -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">📋</div>
+                        <div class="service-name">OpenAPI 스펙</div>
+                    </div>
+                    <div class="service-details">
+                        <p style="font-size: 0.95rem; color: #666;">
+                            OpenAPI 3.0 형식의 완전한 API 스펙 정의
+                        </p>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="../../docs/swagger.json" class="btn btn-primary" target="_blank">JSON 보기</a>
+                    </div>
+                </div>
+
+                <!-- 깃허브 -->
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-icon">💻</div>
+                        <div class="service-name">프로젝트 정보</div>
+                    </div>
+                    <div class="service-details">
+                        <p style="font-size: 0.95rem; color: #666;">
+                            프로젝트: Community Hot Posts Aggregator<br/>
+                            기술: PostgREST + PostgreSQL + Vue/JavaScript
+                        </p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="showProjectInfo()">상세 정보</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 빠른 명령어 -->
+        <div class="section">
+            <h2 class="section-title">⚡ 빠른 명령어</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3 style="margin-bottom: 1rem; color: #333;">Docker</h3>
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 6px; font-family: 'Monaco', monospace; font-size: 0.9rem;">
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="color: #666;"># 서비스 시작</span><br/>
+                            docker-compose up -d
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="color: #666;"># 서비스 중지</span><br/>
+                            docker-compose down
+                        </div>
+                        <div>
+                            <span style="color: #666;"># 로그 확인</span><br/>
+                            docker-compose logs -f
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <h3 style="margin-bottom: 1rem; color: #333;">API 테스트</h3>
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 6px; font-family: 'Monaco', monospace; font-size: 0.9rem;">
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="color: #666;"># 게시글 조회</span><br/>
+                            curl "http://localhost:3001/posts?limit=5"
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="color: #666;"># 카테고리 필터</span><br/>
+                            curl "http://localhost:3001/posts?categories.name=eq.tech"
+                        </div>
+                        <div>
+                            <span style="color: #666;"># 통계 조회</span><br/>
+                            curl -X POST http://localhost:3001/rpc/get_posts_stats -d "{}"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <h3 style="margin-bottom: 1rem; color: #333;">포트 확인</h3>
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 6px; font-family: 'Monaco', monospace; font-size: 0.9rem;">
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="color: #666;"># 모든 포트 확인</span><br/>
+                            netstat -an | grep LISTEN
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="color: #666;"># 특정 포트 확인</span><br/>
+                            lsof -i :3001
+                        </div>
+                        <div>
+                            <span style="color: #666;"># Docker 상태</span><br/>
+                            docker-compose ps
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 주의사항 -->
+        <div class="note">
+            <strong>⚠️ 중요:</strong>
+            이것은 개발 환경입니다. 모든 자격증명이 공개되어 있으므로 프로덕션 환경에서는 사용하지 마세요.
+            프로덕션에서는 환경 변수로 민감한 정보를 관리하고, 강력한 암호를 설정하세요.
+        </div>
+    </div>
+
+    <!-- 토스트 알림 -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ 복사됨';
+                button.style.color = '#4caf50';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.color = '#667eea';
+                }, 2000);
+            });
+        }
+
+        function showProjectInfo() {
+            const info = `
+커뮤니티 인기글 모아보기 (Community Hot Posts Aggregator)
+
+📊 프로젝트 정보:
+- 여러 온라인 커뮤니티의 인기글을 한곳에서 볼 수 있는 웹 서비스
+- PostgREST 기반의 자동 생성 REST API
+- PostgreSQL 데이터베이스
+- 반응형 웹 디자인
+
+🛠️ 기술 스택:
+- Frontend: HTML5, CSS3, JavaScript (Vanilla)
+- Backend: PostgREST (Schema-based Auto-generated API)
+- Database: PostgreSQL 15
+- Containerization: Docker & Docker Compose
+- Documentation: Swagger/OpenAPI 3.0
+
+📁 주요 구성:
+- Step 1: 정적 UI (HTML/CSS)
+- Step 2: JavaScript 상호작용
+- Step 3: PostgreSQL 데이터베이스
+- Step 4: REST API (PostgREST로 자동 생성)
+- Step 5: 완전 통합 (Frontend + Backend)
+
+🎯 주요 기능:
+- 게시글 목록 조회 (필터링, 정렬, 검색, 페이지네이션)
+- 카테고리별 필터링 (기술, 뉴스, 연예, 스포츠, 일상)
+- 여러 정렬 옵션 (최신순, 추천순, 댓글순)
+- 실시간 검색
+- 통계 정보 표시
+- Swagger UI를 통한 인터랙티브 API 문서
+
+📈 성능:
+- 50개 이상의 샘플 게시글
+- 다중 인덱스를 통한 최적화
+- 페이지네이션 지원
+- JSON 응답 최적화
+            `;
+
+            alert(info);
+        }
+
+        // 페이지 로드 시 서비스 상태 확인
+        document.addEventListener('DOMContentLoaded', () => {
+            checkServices();
+        });
+
+        async function checkServices() {
+            const services = [
+                { url: 'http://localhost:3001/posts?limit=1', name: 'PostgREST' },
+                { url: 'http://localhost:8080', name: 'Swagger UI' },
+                { url: 'http://localhost:5500', name: '프론트엔드' },
+                { url: 'http://localhost:5050', name: 'pgAdmin' },
+                { url: 'http://localhost:8025', name: 'MailHog' }
+            ];
+
+            for (const service of services) {
+                try {
+                    const response = await fetch(service.url, { mode: 'no-cors' });
+                    // no-cors 모드에서는 모두 성공으로 간주
+                } catch (error) {
+                    console.log(`${service.name} 연결 실패`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

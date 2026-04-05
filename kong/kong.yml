@@ -1,0 +1,106 @@
+_format_version: "1.1"
+
+services:
+  # Auth 서비스 라우팅
+  - name: auth
+    host: auth
+    port: 9999
+    protocol: http
+    routes:
+      - name: auth-all
+        paths:
+          - /auth/v1
+        strip_path: false
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - Content-Type
+            - Authorization
+          credentials: true
+          max_age: 86400
+
+  # PostgREST (REST API) 서비스
+  - name: rest
+    host: postgres
+    port: 5432
+    protocol: http
+    routes:
+      - name: rest-all
+        paths:
+          - /rest/v1
+        strip_path: false
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - Content-Type
+            - Authorization
+          credentials: true
+          max_age: 86400
+
+consumers:
+  - username: anon
+    custom_id: anon-key
+
+  - username: service_role
+    custom_id: service-role-key
+
+plugins:
+  # 전역 CORS 정책
+  - name: cors
+    config:
+      origins:
+        - "*"
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+        - OPTIONS
+      headers:
+        - Accept
+        - Accept-Version
+        - Content-Length
+        - Content-MD5
+        - Content-Type
+        - Date
+        - X-Auth-Token
+        - Authorization
+        - X-CSRF-Token
+        - X-Forwarded-For
+        - X-Forwarded-Proto
+        - X-Forwarded-Host
+      expose_headers:
+        - X-Auth-Token
+        - Content-Range
+        - X-Content-Range
+      credentials: true
+      max_age: 86400
+      preflight_continue: false
+
+  # 전역 로깅
+  - name: http-log
+    config:
+      http_endpoint: http://localhost:8025
+      method: POST

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티 인기글 모아보기 - Step 2</title>
+    <link rel="stylesheet" href="../step1/style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">🔥 핫글 모아보기</h1>
+            <p class="tagline">커뮤니티의 인기글을 한 곳에서! (Step 2: JavaScript 상호작용)</p>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h3>카테고리</h3>
+                <div class="category-list">
+                    <button class="category-btn active" data-category="all">
+                        📌 전체
+                    </button>
+                    <button class="category-btn" data-category="tech">
+                        💻 기술
+                    </button>
+                    <button class="category-btn" data-category="news">
+                        📰 뉴스
+                    </button>
+                    <button class="category-btn" data-category="entertainment">
+                        🎬 연예
+                    </button>
+                    <button class="category-btn" data-category="sports">
+                        ⚽ 스포츠
+                    </button>
+                    <button class="category-btn" data-category="life">
+                        🏠 일상
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>정렬</h3>
+                <div class="sort-list">
+                    <button class="sort-btn active" data-sort="latest">
+                        🕐 최신순
+                    </button>
+                    <button class="sort-btn" data-sort="likes">
+                        👍 추천순
+                    </button>
+                    <button class="sort-btn" data-sort="comments">
+                        💬 댓글순
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 검색 바 -->
+            <div class="search-bar">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="게시글 검색... (제목, 내용)"
+                >
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <!-- 게시글 그리드 -->
+            <!-- JavaScript에서 동적으로 게시글이 생성됩니다 -->
+            <div class="posts-grid">
+                <!-- 로딩 중 메시지 -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                    <p style="color: #999;">게시글을 로드하는 중...</p>
+                </div>
+            </div>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <button class="pagination-btn" disabled>← 이전</button>
+                <span class="page-info">페이지 1 / 1</span>
+                <button class="pagination-btn">다음 →</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <p>&copy; 2024 커뮤니티 인기글 모아보기 - Step 2 (Mock 데이터 사용)</p>
+    </footer>
+
+    <!-- JavaScript 파일 로드 -->
+    <!-- data.js: Mock 데이터 정의 -->
+    <script src="data.js"></script>
+
+    <!-- app.js: 애플리케이션 로직 -->
+    <script src="app.js"></script>
+</body>
+</html>
