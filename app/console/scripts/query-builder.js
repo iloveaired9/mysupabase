@@ -50,10 +50,14 @@ class QueryBuilder {
         );
         UIComponents.showToast(`${queryType} executed successfully (${response.rowsAffected} rows affected)`, 'success');
 
-        // Refresh table list if in Data tab context
-        if (tableManager && tableManager.currentTable) {
-          await tableManager.loadTableList();
-          await tableManager.selectTable(tableManager.currentTable);
+        // Refresh table list if DML was executed and Data tab is active
+        try {
+          if (typeof tableManager !== 'undefined' && tableManager && tableManager.currentTable) {
+            await tableManager.loadTableList();
+            await tableManager.selectTable(tableManager.currentTable);
+          }
+        } catch (refreshError) {
+          console.warn('Auto-refresh skipped:', refreshError);
         }
       }
     } catch (error) {
