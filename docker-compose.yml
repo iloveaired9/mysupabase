@@ -67,20 +67,15 @@ services:
       - supabase-net
     restart: unless-stopped
 
-  # Swagger UI - API 문서 시각화 (커스텀 CSS 및 브랜드 적용)
+  # Swagger UI - API 문서 시각화 (nginx 기반)
   swagger-ui:
     container_name: supabase-swagger-ui
-    image: swaggerapi/swagger-ui:latest
-    environment:
-      # OpenAPI 스펙 파일 경로
-      SWAGGER_JSON: /swagger.json
-      # 또는 PostgREST 자동 생성 스펙 사용
-      # SWAGGER_JSON_URL: http://postgrest:3000/
+    image: nginx:alpine
     ports:
-      - "8080:8080"
+      - "8080:80"
     volumes:
-      # docs 디렉토리 전체 마운트 (swagger.json, index.html, CSS, 자산)
-      - ./docs:/usr/share/nginx/html
+      # docs 디렉토리를 nginx 웹서버로 제공
+      - ./docs:/usr/share/nginx/html:ro
     depends_on:
       - postgrest
     networks:
