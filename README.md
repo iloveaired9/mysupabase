@@ -227,6 +227,23 @@ AWS에서 프로젝트를 배포하고 운영하는 완벽한 가이드:
   * 로그 모니터링
   * 보안 업데이트
 
+### 🔧 Backend API 서버 가이드
+**`docs/BACKEND_API_GUIDE.md`**
+
+Node.js Express 기반 Backend API 서버 가이드:
+- Docker Compose를 통한 자동 빌드
+- 프로젝트 구조 (Dockerfile, package.json)
+- API 엔드포인트 (POST /api/posts, GET /api/categories 등)
+- 환경 변수 설정
+- PostgreSQL 연결 설정
+- 로컬 개발 환경 (npm dev, nodemon)
+- 포트 구성 (3000: Backend, 3001: PostgREST)
+- Docker로 로컬 실행 방법
+- AWS RDS 연결 설정
+- 자동 재시작 (systemd)
+- 문제 해결 (연결 실패, 포트 충돌 등)
+- PostgREST vs Backend API 비교
+
 ---
 
 ## 🎨 API 엔드포인트
