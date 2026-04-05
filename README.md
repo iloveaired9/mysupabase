@@ -400,9 +400,11 @@ POSTGREST_PORT=3002
 - **[Step별 가이드](app/step1/README.md)** - 단계별 학습
 
 ### 🔗 GitHub 페이지
+- **[저장소](https://github.com/iloveaired9/mysuperbase)** - 소스 코드
 - **[Issues](https://github.com/iloveaired9/mysuperbase/issues)** - 버그 신고 및 기능 요청
 - **[Discussions](https://github.com/iloveaired9/mysuperbase/discussions)** - 질문 및 토론
 - **[Wiki](https://github.com/iloveaired9/mysuperbase/wiki)** - 추가 문서
+- **[Releases](https://github.com/iloveaired9/mysuperbase/releases)** - 버전 이력
 
 ### 📚 기초 개념
 - **PostgREST**: PostgreSQL 스키마 기반 자동 API 생성
