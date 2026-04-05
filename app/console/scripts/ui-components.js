@@ -51,7 +51,7 @@ class UIComponents {
   /**
    * Create table data row
    */
-  static createTableRow(columns, data) {
+  static createTableRow(columns, data, tableName = null) {
     const row = document.createElement('tr');
 
     columns.forEach(column => {
@@ -74,22 +74,116 @@ class UIComponents {
       row.appendChild(td);
     });
 
+    // Add action cell with edit and delete buttons
+    if (tableName && data.id) {
+      const actionTd = document.createElement('td');
+      actionTd.style.textAlign = 'center';
+      actionTd.style.whiteSpace = 'nowrap';
+      actionTd.style.display = 'flex';
+      actionTd.style.gap = '4px';
+      actionTd.style.justifyContent = 'center';
+
+      // Edit button
+      const editBtn = document.createElement('button');
+      editBtn.innerHTML = '✏️ Edit';
+      editBtn.style.padding = '4px 8px';
+      editBtn.style.fontSize = '12px';
+      editBtn.style.backgroundColor = '#4444ff';
+      editBtn.style.color = 'white';
+      editBtn.style.border = 'none';
+      editBtn.style.borderRadius = '4px';
+      editBtn.style.cursor = 'pointer';
+
+      editBtn.addEventListener('click', async () => {
+        try {
+          // Get table schema
+          const schemaResponse = await apiClient.getTableSchema(tableName);
+          const columns = (schemaResponse.data?.columns) || (schemaResponse.columns) || [];
+
+          // Filter editable columns (not primary key, not auto-generated)
+          const editableColumns = columns.filter(col =>
+            !col.isPrimaryKey &&
+            col.name !== 'id' &&
+            !col.name.includes('_at') &&
+            !col.type.includes('timestamp') &&
+            !col.type.includes('date')
+          );
+
+          // Show edit modal
+          UIComponents.showEditModal(tableName, data, editableColumns);
+        } catch (error) {
+          UIComponents.showToast(`Failed to load schema: ${error.message}`, 'error');
+        }
+      });
+
+      // Delete button
+      const deleteBtn = document.createElement('button');
+      deleteBtn.innerHTML = '🗑️ Delete';
+      deleteBtn.style.padding = '4px 8px';
+      deleteBtn.style.fontSize = '12px';
+      deleteBtn.style.backgroundColor = '#ff4444';
+      deleteBtn.style.color = 'white';
+      deleteBtn.style.border = 'none';
+      deleteBtn.style.borderRadius = '4px';
+      deleteBtn.style.cursor = 'pointer';
+
+      deleteBtn.addEventListener('click', async () => {
+        if (confirm(`Delete record #${data.id}? This action cannot be undone.`)) {
+          try {
+            const query = `DELETE FROM ${tableName} WHERE id = ${data.id};`;
+            const response = await apiClient.executeDML(query);
+            console.log('✅ Delete response:', response);
+            UIComponents.showToast(`Record #${data.id} deleted successfully`, 'success');
+
+            // Refresh table - reload current page data
+            console.log('🔄 Refreshing table data...');
+            if (tableManager && tableManager.currentTable === tableName) {
+              try {
+                const currentPage = tableManager.currentPage || 1;
+                const recordsPerPage = tableManager.recordsPerPage || 10;
+                const response = await apiClient.getTableRecords(tableName, currentPage, recordsPerPage);
+                tableManager.renderTableData(response.data, response.pagination);
+                console.log('✅ Table data refreshed');
+              } catch (error) {
+                console.error('Refresh failed:', error);
+              }
+            }
+          } catch (error) {
+            console.error('❌ Delete error:', error);
+            UIComponents.showToast(`Failed to delete: ${error.message}`, 'error');
+          }
+        }
+      });
+
+      actionTd.appendChild(editBtn);
+      actionTd.appendChild(deleteBtn);
+      row.appendChild(actionTd);
+    }
+
     return row;
   }
 
   /**
    * Create table from data
    */
-  static createTable(columns, rows) {
+  static createTable(columns, rows, tableName = null) {
     const table = document.createElement('table');
 
     // Add header
-    table.appendChild(this.createTableHeader(columns));
+    const headerRow = this.createTableHeader(columns);
+    // Add action column header if tableName is provided
+    if (tableName && rows.length > 0 && rows[0].id) {
+      const headerCell = document.createElement('th');
+      headerCell.textContent = 'Action';
+      headerCell.style.textAlign = 'center';
+      headerRow.querySelector('tr').appendChild(headerCell);
+    }
+    table.appendChild(headerRow);
 
     // Add body
     const tbody = document.createElement('tbody');
     rows.forEach(row => {
-      tbody.appendChild(this.createTableRow(columns, row));
+      tbody.appendChild(this.createTableRow(columns, row, tableName));
     });
     table.appendChild(tbody);
 
@@ -129,6 +223,122 @@ class UIComponents {
         form.innerHTML = '';
       }
     }
+  }
+
+  /**
+   * Show edit modal for record
+   */
+  static showEditModal(tableName, record, editableColumns) {
+    const modal = document.getElementById('recordModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const recordForm = document.getElementById('recordForm');
+    const saveBtn = document.getElementById('saveRecordBtn');
+
+    if (!modal || !recordForm) return;
+
+    // Set modal title
+    modalTitle.textContent = `Edit Record #${record.id}`;
+
+    // Clear form
+    recordForm.innerHTML = '';
+
+    // Create form fields for editable columns
+    editableColumns.forEach(column => {
+      const formGroup = document.createElement('div');
+      formGroup.className = 'form-group';
+
+      const label = document.createElement('label');
+      label.textContent = column.name;
+      label.style.fontWeight = 'bold';
+      formGroup.appendChild(label);
+
+      let input;
+      const currentValue = record[column.name];
+
+      if (column.type.includes('bool')) {
+        input = document.createElement('select');
+        input.innerHTML = `
+          <option value="">-- Select --</option>
+          <option value="true" ${currentValue === true ? 'selected' : ''}>true</option>
+          <option value="false" ${currentValue === false ? 'selected' : ''}>false</option>
+        `;
+      } else if (column.type.includes('int')) {
+        input = document.createElement('input');
+        input.type = 'number';
+        input.value = currentValue || '';
+      } else if (column.type.includes('text')) {
+        input = document.createElement('textarea');
+        input.value = currentValue || '';
+        input.rows = 3;
+      } else {
+        input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentValue || '';
+      }
+
+      input.id = `edit_${column.name}`;
+      input.name = column.name;
+      input.dataset.columnType = column.type;
+
+      formGroup.appendChild(input);
+      recordForm.appendChild(formGroup);
+    });
+
+    // Remove existing save button listener and add new one
+    const newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+    newSaveBtn.addEventListener('click', async () => {
+      // Build UPDATE query
+      const updates = [];
+      editableColumns.forEach(column => {
+        const input = document.getElementById(`edit_${column.name}`);
+        if (input) {
+          let value = input.value;
+          if (value === '') {
+            value = 'NULL';
+          } else if (column.type.includes('int')) {
+            value = value; // No quotes for numbers
+          } else {
+            value = `'${value.replace(/'/g, "''")}'`; // Escape single quotes
+          }
+          updates.push(`${column.name} = ${value}`);
+        }
+      });
+
+      if (updates.length === 0) {
+        UIComponents.showToast('No changes made', 'warning');
+        return;
+      }
+
+      try {
+        const query = `UPDATE ${tableName} SET ${updates.join(', ')} WHERE id = ${record.id};`;
+        const response = await apiClient.executeDML(query);
+        console.log('✅ Update response:', response);
+        UIComponents.showToast(`Record #${record.id} updated successfully`, 'success');
+        UIComponents.hideModal();
+
+        // Refresh table - reload current page data
+        console.log('🔄 Refreshing table data...');
+        if (tableManager && tableManager.currentTable === tableName) {
+          try {
+            const currentPage = tableManager.currentPage || 1;
+            const recordsPerPage = tableManager.recordsPerPage || 10;
+            const response = await apiClient.getTableRecords(tableName, currentPage, recordsPerPage);
+            tableManager.renderTableData(response.data, response.pagination);
+            console.log('✅ Table data refreshed');
+          } catch (error) {
+            console.error('Refresh failed:', error);
+          }
+        }
+      } catch (error) {
+        console.error('❌ Update error:', error);
+        UIComponents.showToast(`Failed to update: ${error.message}`, 'error');
+      }
+    });
+
+    // Show modal
+    modal.classList.add('active');
   }
 
   /**

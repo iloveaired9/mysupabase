@@ -72,6 +72,7 @@
                     <button class="tab-btn active" data-tab="data">📊 Data</button>
                     <button class="tab-btn" data-tab="schema">📋 Schema</button>
                     <button class="tab-btn" data-tab="query">🔍 SQL Query</button>
+                    <button class="tab-btn" data-tab="crud">📝 CRUD Test</button>
                     <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
                 </div>
 
@@ -99,6 +100,40 @@
                             <button class="btn btn-primary" id="executeQueryBtn">Execute Query</button>
                         </div>
                         <div class="query-results" id="queryResults"></div>
+                    </div>
+
+                    <!-- CRUD Test Tab -->
+                    <div class="tab-pane" id="tab-crud">
+                        <div class="crud-test-panel">
+                            <div class="crud-section">
+                                <h3>🔧 CRUD Test Tools</h3>
+                                <p id="crudTableInfo">Select a table to test CRUD operations</p>
+
+                                <div class="crud-buttons">
+                                    <button class="btn btn-primary" id="crudCreateBtn">
+                                        ➕ Create Record
+                                    </button>
+                                    <button class="btn btn-primary" id="crudReadBtn">
+                                        👁️ Read Records
+                                    </button>
+                                    <button class="btn btn-secondary" id="crudUpdateBtn">
+                                        ✏️ Update Record
+                                    </button>
+                                    <button class="btn btn-danger" id="crudDeleteBtn">
+                                        🗑️ Delete Record
+                                    </button>
+                                </div>
+
+                                <div class="crud-info">
+                                    <h4>Table Information:</h4>
+                                    <ul id="crudTableDetails">
+                                        <li>Select a table to view details</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="crud-results" id="crudResults"></div>
+                        </div>
                     </div>
 
                     <!-- Settings Tab -->

@@ -97,7 +97,7 @@ class TableManager {
     }
 
     const columns = Object.keys(rows[0]);
-    const table = UIComponents.createTable(columns, rows);
+    const table = UIComponents.createTable(columns, rows, this.currentTable);
     tableView.appendChild(table);
 
     // Render pagination
