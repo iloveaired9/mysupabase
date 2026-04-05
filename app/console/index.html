@@ -71,7 +71,7 @@
                 <div class="content-tabs">
                     <button class="tab-btn active" data-tab="data">📊 Data</button>
                     <button class="tab-btn" data-tab="schema">📋 Schema</button>
-                    <button class="tab-btn" data-tab="query">🔍 Query</button>
+                    <button class="tab-btn" data-tab="query">🔍 SQL Query</button>
                     <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
                 </div>
 
@@ -95,7 +95,7 @@
                     <!-- Query Tab -->
                     <div class="tab-pane" id="tab-query">
                         <div class="query-editor">
-                            <textarea id="queryInput" placeholder="SELECT * FROM posts LIMIT 10;" spellcheck="false"></textarea>
+                            <textarea id="queryInput" placeholder="SELECT * FROM posts LIMIT 10;&#10;-- or try:&#10;INSERT INTO users (username, email, password_hash) VALUES (...);&#10;UPDATE users SET email = ... WHERE id = ...;&#10;DELETE FROM users WHERE id = ...;" spellcheck="false"></textarea>
                             <button class="btn btn-primary" id="executeQueryBtn">Execute Query</button>
                         </div>
                         <div class="query-results" id="queryResults"></div>

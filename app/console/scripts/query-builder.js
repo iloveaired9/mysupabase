@@ -5,7 +5,7 @@
 
 class QueryBuilder {
   /**
-   * Execute SQL query
+   * Execute SQL query (SELECT, INSERT, UPDATE, DELETE)
    */
   static async executeQuery() {
     const queryInput = document.getElementById('queryInput');
@@ -16,9 +16,13 @@ class QueryBuilder {
       return;
     }
 
-    // Validate that it's a SELECT query
-    if (!query.toUpperCase().startsWith('SELECT')) {
-      UIComponents.showToast('Only SELECT queries are allowed', 'warning');
+    const upperQuery = query.toUpperCase();
+    const queryType = this.detectQueryType(upperQuery);
+
+    // Validate query type
+    const allowedTypes = ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
+    if (!allowedTypes.includes(queryType)) {
+      UIComponents.showToast('Only SELECT, INSERT, UPDATE, and DELETE queries are allowed', 'warning');
       return;
     }
 
@@ -27,15 +31,48 @@ class QueryBuilder {
     resultsDiv.appendChild(UIComponents.createSpinner());
 
     try {
-      const response = await apiClient.executeQuery(query);
-      this.renderResults(response.data);
-      UIComponents.showToast(`Query executed successfully (${response.rowCount} rows)`, 'success');
+      let response;
+
+      if (queryType === 'SELECT') {
+        // SELECT query
+        response = await apiClient.executeQuery(query);
+        this.renderResults(response.data);
+        UIComponents.showToast(`Query executed successfully (${response.rowCount} rows)`, 'success');
+      } else {
+        // DML query (INSERT, UPDATE, DELETE)
+        response = await apiClient.executeDML(query);
+        resultsDiv.innerHTML = '';
+        resultsDiv.appendChild(
+          UIComponents.createInfoBox(
+            `${queryType} executed successfully\n${response.rowsAffected} row(s) affected`,
+            'success'
+          )
+        );
+        UIComponents.showToast(`${queryType} executed successfully (${response.rowsAffected} rows affected)`, 'success');
+
+        // Refresh table list if in Data tab context
+        if (tableManager && tableManager.currentTable) {
+          await tableManager.loadTableList();
+          await tableManager.selectTable(tableManager.currentTable);
+        }
+      }
     } catch (error) {
       console.error('Query execution failed:', error);
       resultsDiv.innerHTML = '';
       resultsDiv.appendChild(UIComponents.createInfoBox(`Error: ${error.message}`, 'error'));
       UIComponents.showToast('Query execution failed', 'error');
     }
+  }
+
+  /**
+   * Detect query type (SELECT, INSERT, UPDATE, DELETE)
+   */
+  static detectQueryType(upperQuery) {
+    if (upperQuery.startsWith('SELECT')) return 'SELECT';
+    if (upperQuery.startsWith('INSERT')) return 'INSERT';
+    if (upperQuery.startsWith('UPDATE')) return 'UPDATE';
+    if (upperQuery.startsWith('DELETE')) return 'DELETE';
+    return 'UNKNOWN';
   }
 
   /**

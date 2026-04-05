@@ -726,6 +726,73 @@ app.post('/api/db/tables', async (req, res) => {
 });
 
 /**
+ * POST /api/db/dml - DML 쿼리 실행 (INSERT, UPDATE, DELETE)
+ */
+app.post('/api/db/dml', async (req, res) => {
+    try {
+        const { query } = req.body;
+
+        if (!query || !query.trim()) {
+            return res.status(400).json({
+                success: false,
+                error: 'No query provided'
+            });
+        }
+
+        const trimmedQuery = query.trim().toUpperCase();
+
+        // DML 쿼리만 허용 (INSERT, UPDATE, DELETE)
+        const allowedDMLs = ['INSERT', 'UPDATE', 'DELETE'];
+        const isAllowedDML = allowedDMLs.some(dml => trimmedQuery.startsWith(dml));
+
+        if (!isAllowedDML) {
+            return res.status(400).json({
+                success: false,
+                error: 'Only INSERT, UPDATE, and DELETE statements are allowed in DML'
+            });
+        }
+
+        // 시스템 테이블 보호
+        if (trimmedQuery.includes('PG_') || trimmedQuery.includes('INFORMATION_SCHEMA')) {
+            return res.status(403).json({
+                success: false,
+                error: 'Cannot modify system tables'
+            });
+        }
+
+        // DML 실행
+        const result = await pool.query(query);
+
+        res.json({
+            success: true,
+            message: `DML query executed successfully`,
+            rowsAffected: result.rowCount,
+            query: trimmedQuery.substring(0, 50) + '...'
+        });
+
+    } catch (error) {
+        console.error('❌ DML 에러:', error);
+
+        // PostgreSQL 에러 코드 해석
+        let errorMessage = error.message;
+        if (error.code === '23505') {
+            errorMessage = 'Unique constraint violation - duplicate value';
+        } else if (error.code === '23503') {
+            errorMessage = 'Foreign key constraint violation';
+        } else if (error.code === '23502') {
+            errorMessage = 'NOT NULL constraint violation';
+        } else if (error.code === '42P01') {
+            errorMessage = 'Table does not exist';
+        }
+
+        res.status(500).json({
+            success: false,
+            error: errorMessage
+        });
+    }
+});
+
+/**
  * POST /api/db/ddl - DDL 쿼리 실행 (CREATE, ALTER, DROP)
  * 여러 개의 쿼리를 세미콜론으로 구분하여 실행 가능
  */

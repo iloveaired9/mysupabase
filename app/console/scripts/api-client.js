@@ -118,6 +118,13 @@ class APIClient {
   async executeDDL(sqlQuery) {
     return this.request('POST', '/db/ddl', { query: sqlQuery });
   }
+
+  /**
+   * Execute DML query (INSERT, UPDATE, DELETE)
+   */
+  async executeDML(sqlQuery) {
+    return this.request('POST', '/db/dml', { query: sqlQuery });
+  }
 }
 
 // Create global instance
