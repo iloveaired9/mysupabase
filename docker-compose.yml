@@ -87,6 +87,39 @@ services:
       - supabase-net
     restart: unless-stopped
 
+  # Backend API 서버 (Node.js Express)
+  backend:
+    container_name: supabase-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      # Backend 서버 설정
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3000
+
+      # PostgreSQL 연결 설정 (backend/.env 와 동일한 변수명)
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-supabase}
+      DB_USER: ${POSTGRES_USER:-supabase}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+
+      # CORS 설정
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+    ports:
+      - "3000:3000"
+    volumes:
+      # 개발 모드: 코드 변경 시 자동 재시작 (nodemon)
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - supabase-net
+    restart: unless-stopped
+
 networks:
   supabase-net:
     driver: bridge
