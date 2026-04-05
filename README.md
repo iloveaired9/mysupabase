@@ -29,6 +29,7 @@ docker-compose up
 
 | 서비스 | URL | 설명 |
 |--------|-----|------|
+| **💾 mysupabase Console** | http://localhost:5055 | Firebase 스타일 DB 관리 UI |
 | **📊 Admin Dashboard** | http://localhost:5500/admin | 모든 서비스 관리 및 접근 |
 | **📚 API 문서 (Swagger UI)** | http://localhost:8080 | 상호작용 가능한 API 문서 |
 | **🔌 PostgREST API** | http://localhost:3001 | REST API 엔드포인트 |
@@ -56,6 +57,16 @@ docker-compose up
 - 포트, URL, 접속 정보 즉시 확인
 - 개발 환경 자격증명 공개 (개발 용도)
 - 빠른 명령어 참고
+
+### ✅ mysupabase Console - Firebase 스타일 DB 관리 UI
+- **데이터베이스 탐색**: 모든 테이블 목록 조회 및 선택
+- **스키마 뷰어**: 테이블 구조, 컬럼 타입, 제약조건 표시
+- **데이터 관리**: 페이지네이션과 함께 레코드 조회 및 추가
+- **동적 폼**: PostgreSQL 컬럼 타입에 따른 입력 필드 자동 생성
+- **SQL 쿼리 실행**: SELECT 쿼리 테스트 및 결과 JSON 표시
+- **테마 관리**: Light/Dark 테마 토글 with localStorage 지속성
+- **응답형 디자인**: 데스크톱/태블릿/모바일 완벽 지원
+- **보안**: 파라미터화된 쿼리로 SQL Injection 방지
 
 ---
 
@@ -335,6 +346,133 @@ netstat -ano | findstr :3001  # (Windows)
 ✅ **프로젝트 정보**
 - 모달로 프로젝트 설명 확인
 - 빠른 링크 모음
+
+---
+
+## 💾 mysupabase Console (http://localhost:5055)
+
+Firebase Console 스타일의 전문적인 데이터베이스 관리 UI입니다.
+
+### 주요 기능
+
+#### 1️⃣ 테이블 목록 조회
+- 사이드바에서 모든 테이블 한눈에 보기
+- 각 테이블의 레코드 수 즉시 표시
+- 테이블 선택 시 자동으로 데이터 로드
+
+#### 2️⃣ 📊 Data 탭 - 데이터 조회 및 추가
+```
+✓ 테이블의 모든 레코드를 페이지네이션으로 표시
+✓ 각 컬럼별 스마트 값 포맷팅 (NULL, JSON, 긴 텍스트 등)
+✓ [+ Add Record] 버튼으로 새 레코드 추가
+✓ 동적 폼 생성 (PostgreSQL 컬럼 타입 기반)
+  - text → textarea
+  - integer/numeric → number input
+  - boolean → checkbox
+  - timestamp → datetime picker
+  - varchar(n) → text input (maxlength 자동 적용)
+```
+
+#### 3️⃣ 📋 Schema 탭 - 테이블 구조 확인
+```
+✓ 모든 컬럼의 이름, 타입, 제약조건 표시
+✓ Nullable 여부 표시
+✓ Default 값 표시
+✓ Primary Key 배지 표시
+```
+
+#### 4️⃣ 🔍 Query 탭 - SQL 쿼리 실행
+```
+✓ SELECT 쿼리만 실행 가능 (보안)
+✓ 쿼리 실행 및 결과를 테이블로 표시
+✓ 결과를 JSON 또는 CSV로 다운로드
+✓ Ctrl+Enter로 빠른 실행
+✓ 샘플 쿼리 제공
+```
+
+#### 5️⃣ ⚙️ Settings 탭 - 테이블 정보
+```
+✓ 테이블 이름, 레코드 수, 컬럼 수 표시
+✓ 테이블 메타정보 한눈에 확인
+```
+
+### 사용 예시
+
+#### 1. 테이블 데이터 조회
+```
+1. 사이드바에서 'posts' 테이블 클릭
+2. Data 탭이 자동으로 열림
+3. 페이지네이션으로 레코드 탐색
+```
+
+#### 2. 새 게시글 추가
+```
+1. Data 탭에서 [+ Add Record] 버튼 클릭
+2. 동적 폼이 모달로 표시됨 (title, excerpt, content 등)
+3. 값 입력 후 [Save] 버튼 클릭
+4. 성공 토스트 표시 및 테이블 자동 새로고침
+```
+
+#### 3. 카테고리별 게시글 검색
+```
+1. Query 탭으로 이동
+2. 다음 쿼리 입력:
+   SELECT p.id, p.title, c.name
+   FROM posts p
+   JOIN categories c ON p.category_id = c.id
+   WHERE c.name = 'tech'
+   LIMIT 10;
+3. [Execute] 버튼 또는 Ctrl+Enter 실행
+4. 결과를 JSON으로 다운로드
+```
+
+#### 4. 테마 전환
+```
+1. 상단 네비게이션 바의 🌙 (달) 또는 ☀️ (해) 아이콘 클릭
+2. 테마 자동 전환 (Light ↔ Dark)
+3. 설정 localStorage에 자동 저장
+```
+
+### 기술 스택
+
+**Frontend:**
+- HTML5 + Vanilla JavaScript (No frameworks)
+- CSS Custom Properties (색상, 폰트, 간격)
+- Responsive Grid Layout
+- localStorage for theme persistence
+
+**Backend:**
+- Node.js Express API
+- PostgreSQL information_schema 활용
+- Parameterized queries (SQL Injection 방지)
+- Pagination support (limit, offset)
+
+**Docker:**
+- nginx:alpine으로 정적 파일 제공
+- Backend API와 독립적으로 실행
+- 포트 5055에서 서비스
+
+### 보안 고려사항
+
+✓ **SQL Injection 방지**: 모든 쿼리 파라미터화
+✓ **SELECT Only**: Query 탭에서 SELECT 쿼리만 실행
+✓ **테이블명 검증**: 정규식으로 테이블명 검증
+✓ **시스템 테이블 제외**: pg_*, information_schema 테이블 숨김
+✓ **Type Safety**: PostgreSQL 컬럼 타입 기반 입력 검증
+
+### API 엔드포인트 (Backend)
+
+Console에서 사용하는 API 엔드포인트:
+
+```
+GET  /api/db/tables                         # 모든 테이블 목록
+GET  /api/db/tables/:tableName/schema       # 테이블 스키마
+GET  /api/db/tables/:tableName/records      # 페이지네이션 레코드
+POST /api/db/tables/:tableName/records      # 레코드 삽입
+POST /api/db/query                          # SELECT 쿼리 실행
+```
+
+자세한 API 문서는 **Swagger UI (http://localhost:8080)** 참조
 
 ---
 
