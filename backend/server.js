@@ -740,8 +740,16 @@ app.post('/api/db/ddl', async (req, res) => {
             });
         }
 
+        // SQL 주석 제거 (-- 와 /* */)
+        let cleanedQuery = query
+            // 한 줄 주석 제거 (-- 부터 줄 끝까지)
+            .replace(/--[^\n]*\n/g, '\n')
+            .replace(/--[^\n]*$/gm, '')
+            // 블록 주석 제거 (/* ... */)
+            .replace(/\/\*[\s\S]*?\*\//g, ' ');
+
         // 여러 쿼리를 세미콜론으로 분리
-        const queries = query
+        const queries = cleanedQuery
             .split(';')
             .map(q => q.trim())
             .filter(q => q.length > 0); // 빈 쿼리 제거
