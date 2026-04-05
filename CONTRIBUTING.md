@@ -15,7 +15,7 @@
 
 ### 버그를 발견했나요?
 
-[GitHub Issues](https://github.com/iloveaired9/mysuperbase/issues/new?labels=bug)에서 버그를 신고해주세요.
+[GitHub Issues](https://github.com/iloveaired9/mysupabase/issues/new?labels=bug)에서 버그를 신고해주세요.
 
 **버그 신고에 포함할 내용:**
 
@@ -50,7 +50,7 @@
 
 ### 새로운 기능을 제안하고 싶으신가요?
 
-[GitHub Discussions](https://github.com/iloveaired9/mysuperbase/discussions/new?category=ideas)에서 제안해주세요.
+[GitHub Discussions](https://github.com/iloveaired9/mysupabase/discussions/new?category=ideas)에서 제안해주세요.
 
 **기능 제안에 포함할 내용:**
 
@@ -79,15 +79,15 @@
 
 ```bash
 # GitHub 웹사이트에서 Fork 버튼 클릭
-https://github.com/iloveaired9/mysuperbase/fork
+https://github.com/iloveaired9/mysupabase/fork
 ```
 
 ### 2. 로컬 저장소 클론
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/mysuperbase.git
-cd mysuperbase
-git remote add upstream https://github.com/iloveaired9/mysuperbase.git
+git clone https://github.com/YOUR_USERNAME/mysupabase.git
+cd mysupabase
+git remote add upstream https://github.com/iloveaired9/mysupabase.git
 ```
 
 ### 3. 새 브랜치 생성
@@ -189,7 +189,7 @@ git push origin feature/your-feature-name
 
 ### 8. Pull Request 생성
 
-[GitHub Pull Request](https://github.com/iloveaired9/mysuperbase/compare)에서 PR을 생성하세요.
+[GitHub Pull Request](https://github.com/iloveaired9/mysupabase/compare)에서 PR을 생성하세요.
 
 **PR 제목:**
 ```
@@ -246,8 +246,8 @@ node --version
 
 ```bash
 # 저장소 클론
-git clone https://github.com/iloveaired9/mysuperbase.git
-cd mysuperbase
+git clone https://github.com/iloveaired9/mysupabase.git
+cd mysupabase
 
 # 서비스 시작
 docker-compose up -d
@@ -362,7 +362,7 @@ const code = "example";
 ### 자주 묻는 질문
 
 **Q: 어디서 시작해야 할까요?**
-A: [Good First Issue](https://github.com/iloveaired9/mysuperbase/issues?q=label:good%20first%20issue)를 확인하세요.
+A: [Good First Issue](https://github.com/iloveaired9/mysupabase/issues?q=label:good%20first%20issue)를 확인하세요.
 
 **Q: PR이 오래된 것 같아요.**
 A: 댓글을 달아 관심이 있음을 표현하세요. 리뷰어가 응답할 것입니다.
@@ -372,8 +372,8 @@ A: Docker, git, 텍스트 에디터(VS Code 추천)만 있으면 됩니다.
 
 ### 추가 도움
 
-- [GitHub Issues](https://github.com/iloveaired9/mysuperbase/issues)에서 질문하세요
-- [GitHub Discussions](https://github.com/iloveaired9/mysuperbase/discussions)에서 토론하세요
+- [GitHub Issues](https://github.com/iloveaired9/mysupabase/issues)에서 질문하세요
+- [GitHub Discussions](https://github.com/iloveaired9/mysupabase/discussions)에서 토론하세요
 
 ---
 
