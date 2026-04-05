@@ -82,6 +82,19 @@ services:
       - supabase-net
     restart: unless-stopped
 
+  # Admin Dashboard (모든 서비스 정보 한눈에 보기)
+  admin:
+    container_name: supabase-admin
+    image: nginx:alpine
+    ports:
+      - "5500:80"
+    volumes:
+      # Admin Dashboard HTML 파일 제공
+      - ./app/admin:/usr/share/nginx/html:ro
+    networks:
+      - supabase-net
+    restart: unless-stopped
+
   # Backend API 서버 (Node.js Express)
   backend:
     container_name: supabase-backend
