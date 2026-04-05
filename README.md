@@ -143,6 +143,55 @@ curl -X POST 'http://localhost:3001/rpc/get_posts_stats' \
 
 ---
 
+## 📖 학습 및 개발 가이드
+
+### 🪟 Windows 11 Pro 설치 가이드
+**`docs/WINDOWS_SETUP_GUIDE.md`**
+
+Windows 11 Pro에서 프로젝트를 처음부터 설정하는 방법:
+- Hyper-V 활성화
+- Docker Desktop 설치 및 최적화
+- Git 설정 및 SSH 키 생성
+- 프로젝트 클론 및 Docker Compose 실행
+- 서비스 접근 확인 및 API 테스트
+- 포트 충돌, 권한, WSL 2 등 문제 해결
+
+### 🚀 PostgREST 완벽 가이드
+**`docs/POSTGREST_GUIDE.md`**
+
+PostgREST 개념을 쉽게 이해하는 학습 자료:
+- PostgREST란 무엇인가?
+- REST API 자동 생성 원리
+- 기본 SQL 개념 (Schema, Table, Column)
+- CRUD 연산과 HTTP 메서드
+- 실제 테이블 추가 예시
+- 자주 묻는 질문 (FAQ)
+
+### 🎯 새 테이블 추가 가이드
+**`docs/NEW_TABLE_GUIDE.md`**
+
+테이블을 생성하고 즉시 REST API를 사용하는 방법:
+- psql 연결 방법 (Docker exec, 로컬 CLI)
+- SQL 테이블 생성 문법 및 데이터 타입
+- PostgreSQL 권한 설정 (GRANT)
+- cURL, Swagger UI, JavaScript로 API 테스트
+- 5가지 실제 사례 (피드백, 댓글, 뉴스레터, 외부키, 다대다 관계)
+- 자주 하는 실수와 베스트 프랙티스
+
+### 📊 데이터베이스 스키마 설계
+**`docs/DATABASE_SCHEMA.md`**
+
+좋은 데이터베이스 설계를 위한 완벽한 가이드:
+- 정규화 원칙 (1NF, 2NF, 3NF)
+- 현재 프로젝트 데이터베이스 구조
+- 데이터 타입 선택 가이드
+- 관계 설계 (1:N, N:N)
+- 인덱스와 성능 최적화
+- 설계 패턴 (Soft Delete, Audit Trail, 비정규화 등)
+- PostgREST 특수 고려사항 (뷰, RPC 함수)
+
+---
+
 ## 🎨 API 엔드포인트
 
 ### Posts (게시글)
