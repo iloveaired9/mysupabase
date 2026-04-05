@@ -148,6 +148,13 @@ class UIComponents {
                 console.error('Refresh failed:', error);
               }
             }
+
+            // Update left menu row count
+            console.log('🔄 Updating table list...');
+            if (tableManager) {
+              await tableManager.loadTableList();
+              console.log('✅ Table list updated');
+            }
           } catch (error) {
             console.error('❌ Delete error:', error);
             UIComponents.showToast(`Failed to delete: ${error.message}`, 'error');
