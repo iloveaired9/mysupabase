@@ -14,7 +14,7 @@
 -- 1. 카테고리 데이터 삽입
 -- ============================================
 
-TRUNCATE categories CASCADE;
+TRUNCATE categories CASCADE RESTART IDENTITY;
 
 INSERT INTO categories (name, icon, description) VALUES
 ('tech', '💻', '기술, 프로그래밍, AI, 클라우드 관련'),
@@ -31,7 +31,7 @@ SELECT COUNT(*) as category_count FROM categories;
 -- 2. 출처 데이터 삽입
 -- ============================================
 
-TRUNCATE sources CASCADE;
+TRUNCATE sources CASCADE RESTART IDENTITY;
 
 INSERT INTO sources (name, url, icon_emoji, description) VALUES
 ('Reddit', 'https://reddit.com', '🔴', '온라인 커뮤니티'),
@@ -50,7 +50,7 @@ SELECT COUNT(*) as source_count FROM sources;
 -- 3. 게시글 데이터 삽입 (50개)
 -- ============================================
 
-TRUNCATE posts CASCADE;
+TRUNCATE posts CASCADE RESTART IDENTITY;
 
 INSERT INTO posts (title, excerpt, category_id, source_id, url, author, likes, comments, views, is_trending, created_at) VALUES
 
