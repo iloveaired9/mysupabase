@@ -382,9 +382,34 @@ class UIComponents {
   }
 
   /**
-   * Create table creation form
+   * Create table creation form with tabs
    */
   static createTableForm() {
+    const container = document.createElement('div');
+    container.id = 'createTableContainer';
+
+    // Tabs
+    const tabs = document.createElement('div');
+    tabs.className = 'create-table-tabs';
+    tabs.style.display = 'flex';
+    tabs.style.gap = '10px';
+    tabs.style.marginBottom = '20px';
+    tabs.style.borderBottom = '1px solid #ddd';
+    tabs.innerHTML = `
+      <button type="button" class="tab-btn-create active" data-tab="form" style="padding: 10px 15px; border: none; background: none; cursor: pointer; border-bottom: 2px solid #667eea; color: #667eea;">
+        📝 Form Builder
+      </button>
+      <button type="button" class="tab-btn-create" data-tab="ddl" style="padding: 10px 15px; border: none; background: none; cursor: pointer; color: #999;">
+        🔧 DDL SQL
+      </button>
+    `;
+    container.appendChild(tabs);
+
+    // Form tab
+    const formTab = document.createElement('div');
+    formTab.id = 'formTab' ;
+    formTab.style.display = 'block';
+
     const form = document.createElement('form');
     form.className = 'modal-form';
     form.id = 'createTableForm';
@@ -416,7 +441,7 @@ class UIComponents {
     // Add first column row
     this.addColumnRow();
 
-    // Buttons
+    // Buttons for form tab
     const buttonGroup = document.createElement('div');
     buttonGroup.style.display = 'flex';
     buttonGroup.style.gap = '10px';
@@ -426,8 +451,63 @@ class UIComponents {
       <button type="button" id="cancelCreateTableBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
     `;
     form.appendChild(buttonGroup);
+    formTab.appendChild(form);
+    container.appendChild(formTab);
 
-    return form;
+    // DDL tab
+    const ddlTab = document.createElement('div');
+    ddlTab.id = 'ddlTab';
+    ddlTab.style.display = 'none';
+
+    const ddlForm = document.createElement('form');
+    ddlForm.id = 'createTableDDLForm';
+
+    const ddlGroup = document.createElement('div');
+    ddlGroup.className = 'form-group';
+    ddlGroup.innerHTML = `
+      <label for="ddlQuery">CREATE TABLE DDL *</label>
+      <textarea id="ddlQuery" name="ddlQuery" placeholder="CREATE TABLE users (&#10;  id SERIAL PRIMARY KEY,&#10;  name TEXT NOT NULL,&#10;  email TEXT NOT NULL,&#10;  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP&#10;);" style="font-family: monospace; min-height: 200px;" required></textarea>
+      <small>Enter CREATE TABLE statement. Supports CREATE, ALTER, and DROP statements.</small>
+    `;
+    ddlForm.appendChild(ddlGroup);
+
+    // Buttons for DDL tab
+    const ddlButtonGroup = document.createElement('div');
+    ddlButtonGroup.style.display = 'flex';
+    ddlButtonGroup.style.gap = '10px';
+    ddlButtonGroup.style.marginTop = '20px';
+    ddlButtonGroup.innerHTML = `
+      <button type="submit" class="btn btn-primary" style="flex: 1;">Execute DDL</button>
+      <button type="button" id="cancelDDLBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+    `;
+    ddlForm.appendChild(ddlButtonGroup);
+    ddlTab.appendChild(ddlForm);
+    container.appendChild(ddlTab);
+
+    // Tab switching logic
+    const tabBtns = container.querySelectorAll('.tab-btn-create');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabName = btn.dataset.tab;
+
+        // Update active tab button
+        tabBtns.forEach(b => {
+          b.classList.remove('active');
+          b.style.borderBottom = 'none';
+          b.style.color = '#999';
+        });
+        btn.classList.add('active');
+        btn.style.borderBottom = '2px solid #667eea';
+        btn.style.color = '#667eea';
+
+        // Show/hide tab content
+        document.getElementById('formTab').style.display = tabName === 'form' ? 'block' : 'none';
+        document.getElementById('ddlTab').style.display = tabName === 'ddl' ? 'block' : 'none';
+      });
+    });
+
+    return container;
   }
 
   /**

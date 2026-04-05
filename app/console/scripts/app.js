@@ -206,26 +206,59 @@ class ConsoleApp {
    */
   showCreateTableModal() {
     UIComponents.showModal('Create New Table');
-    const form = UIComponents.createTableForm();
+    const container = UIComponents.createTableForm();
     const recordForm = document.getElementById('recordForm');
     recordForm.innerHTML = '';
-    recordForm.appendChild(form);
+    recordForm.appendChild(container);
 
     // Add column button
-    document.getElementById('addColumnBtn').addEventListener('click', () => {
-      UIComponents.addColumnRow();
-    });
+    setTimeout(() => {
+      const addColumnBtn = document.getElementById('addColumnBtn');
+      if (addColumnBtn) {
+        addColumnBtn.addEventListener('click', () => {
+          UIComponents.addColumnRow();
+        });
+      }
+    }, 0);
 
-    // Cancel button
-    document.getElementById('cancelCreateTableBtn').addEventListener('click', () => {
-      UIComponents.hideModal();
-    });
+    // Cancel buttons
+    setTimeout(() => {
+      const cancelBtn = document.getElementById('cancelCreateTableBtn');
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+          UIComponents.hideModal();
+        });
+      }
 
-    // Form submission
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await this.handleCreateTable();
-    });
+      const cancelDDLBtn = document.getElementById('cancelDDLBtn');
+      if (cancelDDLBtn) {
+        cancelDDLBtn.addEventListener('click', () => {
+          UIComponents.hideModal();
+        });
+      }
+    }, 0);
+
+    // Form submission (Form tab)
+    setTimeout(() => {
+      const form = document.getElementById('createTableForm');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          await this.handleCreateTable();
+        });
+      }
+    }, 0);
+
+    // Form submission (DDL tab)
+    setTimeout(() => {
+      const ddlForm = document.getElementById('createTableDDLForm');
+      if (ddlForm) {
+        ddlForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          await this.handleCreateTableDDL();
+        });
+      }
+    }, 0);
   }
 
   /**
@@ -266,6 +299,29 @@ class ConsoleApp {
     try {
       const response = await apiClient.createTable(tableName, columns);
       UIComponents.showToast(`Table '${tableName}' created successfully!`, 'success');
+      UIComponents.hideModal();
+
+      // Refresh table list
+      await tableManager.loadTableList();
+    } catch (error) {
+      UIComponents.showToast(`Error: ${error.message}`, 'error');
+    }
+  }
+
+  /**
+   * Handle DDL execution
+   */
+  async handleCreateTableDDL() {
+    const ddlQuery = document.getElementById('ddlQuery').value.trim();
+
+    if (!ddlQuery) {
+      UIComponents.showToast('DDL query is required', 'warning');
+      return;
+    }
+
+    try {
+      const response = await apiClient.executeDDL(ddlQuery);
+      UIComponents.showToast('DDL executed successfully!', 'success');
       UIComponents.hideModal();
 
       // Refresh table list

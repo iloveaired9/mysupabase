@@ -726,6 +726,70 @@ app.post('/api/db/tables', async (req, res) => {
 });
 
 /**
+ * POST /api/db/ddl - DDL 쿼리 실행 (CREATE, ALTER, DROP)
+ */
+app.post('/api/db/ddl', async (req, res) => {
+    try {
+        const { query } = req.body;
+
+        if (!query || !query.trim()) {
+            return res.status(400).json({
+                success: false,
+                error: 'No query provided'
+            });
+        }
+
+        const trimmedQuery = query.trim().toUpperCase();
+
+        // DDL 쿼리만 허용 (CREATE, ALTER, DROP)
+        const allowedDDLs = ['CREATE', 'ALTER', 'DROP'];
+        const isAllowedDDL = allowedDDLs.some(ddl => trimmedQuery.startsWith(ddl));
+
+        if (!isAllowedDDL) {
+            return res.status(400).json({
+                success: false,
+                error: 'Only CREATE, ALTER, and DROP statements are allowed in DDL'
+            });
+        }
+
+        // 시스템 테이블 보호
+        if (trimmedQuery.includes('PG_') || trimmedQuery.includes('INFORMATION_SCHEMA')) {
+            return res.status(403).json({
+                success: false,
+                error: 'Cannot modify system tables'
+            });
+        }
+
+        // DDL 실행
+        await pool.query(query);
+
+        res.json({
+            success: true,
+            message: 'DDL query executed successfully',
+            query: trimmedQuery.substring(0, 50) + '...'
+        });
+
+    } catch (error) {
+        console.error('❌ DDL 에러:', error);
+
+        // PostgreSQL 에러 코드 해석
+        let errorMessage = error.message;
+        if (error.code === '42P07') {
+            errorMessage = 'Table or object already exists';
+        } else if (error.code === '42704') {
+            errorMessage = 'Table or object does not exist';
+        } else if (error.code === '42601') {
+            errorMessage = 'Syntax error in DDL statement';
+        }
+
+        res.status(500).json({
+            success: false,
+            error: errorMessage
+        });
+    }
+});
+
+/**
  * 404 Not Found
  */
 app.use((req, res) => {
