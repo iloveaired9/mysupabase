@@ -278,7 +278,7 @@ Get-Content backup.sql -Head 50
 **백업 스크립트 생성** (`backup.ps1` - PowerShell):
 
 ```powershell
-# C:\dev\mysuperbase\backup.ps1
+# C:\dev\mysupabase\backup.ps1
 
 # 설정
 $BACKUP_DIR = ".\backups"
@@ -454,7 +454,7 @@ docker exec -it supabase-postgres psql -U supabase supabase \
 `backup-auto.ps1` 파일 생성:
 
 ```powershell
-# C:\dev\mysuperbase\scripts\backup-auto.ps1
+# C:\dev\mysupabase\scripts\backup-auto.ps1
 
 param(
     [string]$BackupDir = ".\backups",
@@ -535,7 +535,7 @@ Log "========== 백업 완료 =========="
 # PowerShell (관리자 권한)에서 실행
 
 # 스크립트 경로
-$ScriptPath = "C:\dev\mysuperbase\scripts\backup-auto.ps1"
+$ScriptPath = "C:\dev\mysupabase\scripts\backup-auto.ps1"
 
 # 실행 정책 변경
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -649,7 +649,7 @@ Error: mkdir failed: permission denied
 # Windows에서는 보통 필요 없지만, WSL 2 사용 시:
 
 # WSL 폴더 권한 확인
-wsl chmod -R 755 /mnt/c/dev/mysuperbase/postgres-data
+wsl chmod -R 755 /mnt/c/dev/mysupabase/postgres-data
 
 # 또는 docker-compose.yml에 환경 변수 추가
 services:

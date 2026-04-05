@@ -14,7 +14,7 @@
 
 ## 개요
 
-이 가이드는 **Windows 11 Pro**에서 mysuperbase 프로젝트를 처음부터 설정하는 방법을 설명합니다.
+이 가이드는 **Windows 11 Pro**에서 mysupabase 프로젝트를 처음부터 설정하는 방법을 설명합니다.
 
 ### 최종 결과
 ```
@@ -245,19 +245,19 @@ cd C:\dev
 
 ```powershell
 # HTTPS 방식 (권장, 비밀번호 필요 없음)
-git clone https://github.com/iloveaired9/mysuperbase.git
-cd mysuperbase
+git clone https://github.com/iloveaired9/mysupabase.git
+cd mysupabase
 
 # 또는 SSH 방식 (SSH 키 설정 후 사용)
-git clone git@github.com:iloveaired9/mysuperbase.git
-cd mysuperbase
+git clone git@github.com:iloveaired9/mysupabase.git
+cd mysupabase
 ```
 
 ### 3️⃣ Docker Compose로 프로젝트 실행
 
 ```powershell
 # 프로젝트 디렉토리 확인
-# C:\dev\mysuperbase 위치에 있어야 함
+# C:\dev\mysupabase 위치에 있어야 함
 
 # 모든 컨테이너 시작
 docker-compose up
@@ -448,7 +448,7 @@ fatal: could not read Username for 'https://github.com': No such file or directo
 git config --global credential.helper wincred
 
 # HTTPS 대신 SSH 사용 (권장)
-git remote set-url origin git@github.com:iloveaired9/mysuperbase.git
+git remote set-url origin git@github.com:iloveaired9/mysupabase.git
 ```
 
 ### ❌ "WSL 2 설치 필요" 오류
@@ -476,7 +476,7 @@ docker-compose up
 
 ```powershell
 # 프로젝트 디렉토리 이동
-cd C:\dev\mysuperbase
+cd C:\dev\mysupabase
 
 # 컨테이너 시작 (또는 Docker Desktop 실행)
 docker-compose up -d
@@ -587,7 +587,7 @@ docker system prune -a --volumes
   docker run hello-world
 
 ☑ 프로젝트 클론
-  git clone https://github.com/iloveaired9/mysuperbase.git
+  git clone https://github.com/iloveaired9/mysupabase.git
 
 ☑ Docker Compose 실행
   docker-compose up -d

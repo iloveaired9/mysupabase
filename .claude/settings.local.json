@@ -47,7 +47,12 @@
       "Bash(curl -s -i -H \"Prefer: count=exact\" \"http://localhost:3001/posts?select=id&limit=6&offset=0\")",
       "Bash(curl -s -X POST http://localhost:3001/rpc/get_categories_with_count -H \"Content-Type: application/json\" -d \"{}\")",
       "Bash(curl -s \"http://localhost:3001/posts?limit=1&select=id,title\")",
-      "Bash(curl -s http://localhost:8080)"
+      "Bash(curl -s http://localhost:8080)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote:*)",
+      "Bash(grep -r mysuperbase docs/ README.md docker-compose.yml --include=*.md --include=*.yml)"
     ]
   }
 }

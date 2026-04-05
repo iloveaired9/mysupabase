@@ -1,12 +1,12 @@
 # 🌟 커뮤니티 인기글 모아보기 (Community Hot Posts Aggregator)
 
-[![GitHub](https://img.shields.io/badge/GitHub-iloveaired9%2Fmysuperbase-blue?logo=github)](https://github.com/iloveaired9/mysuperbase)
+[![GitHub](https://img.shields.io/badge/GitHub-iloveaired9%2Fmysupabase-blue?logo=github)](https://github.com/iloveaired9/mysupabase)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)](docker-compose.yml)
 
 여러 온라인 커뮤니티의 인기글을 한 곳에서 모아볼 수 있는 **PostgREST 기반 API** 프로젝트입니다.
 
-**📍 GitHub Repository**: https://github.com/iloveaired9/mysuperbase
+**📍 GitHub Repository**: https://github.com/iloveaired9/mysupabase
 
 ## 📋 프로젝트 개요
 
@@ -463,11 +463,11 @@ POSTGREST_PORT=3002
 - **[Step별 가이드](app/step1/README.md)** - 단계별 학습
 
 ### 🔗 GitHub 페이지
-- **[저장소](https://github.com/iloveaired9/mysuperbase)** - 소스 코드
-- **[Issues](https://github.com/iloveaired9/mysuperbase/issues)** - 버그 신고 및 기능 요청
-- **[Discussions](https://github.com/iloveaired9/mysuperbase/discussions)** - 질문 및 토론
-- **[Wiki](https://github.com/iloveaired9/mysuperbase/wiki)** - 추가 문서
-- **[Releases](https://github.com/iloveaired9/mysuperbase/releases)** - 버전 이력
+- **[저장소](https://github.com/iloveaired9/mysupabase)** - 소스 코드
+- **[Issues](https://github.com/iloveaired9/mysupabase/issues)** - 버그 신고 및 기능 요청
+- **[Discussions](https://github.com/iloveaired9/mysupabase/discussions)** - 질문 및 토론
+- **[Wiki](https://github.com/iloveaired9/mysupabase/wiki)** - 추가 문서
+- **[Releases](https://github.com/iloveaired9/mysupabase/releases)** - 버전 이력
 
 ### 📚 기초 개념
 - **PostgREST**: PostgreSQL 스키마 기반 자동 API 생성
@@ -521,11 +521,11 @@ fetch(`${API_BASE}/posts?limit=10&order=likes.desc`)
 
 이 프로젝트에 기여하고 싶으신가요?
 
-1. [저장소를 Fork](https://github.com/iloveaired9/mysuperbase/fork)하세요
+1. [저장소를 Fork](https://github.com/iloveaired9/mysupabase/fork)하세요
 2. 새로운 브랜치를 만드세요 (`git checkout -b feature/amazing-feature`)
 3. 변경사항을 Commit하세요 (`git commit -m 'feat: Add amazing feature'`)
 4. 브랜치에 Push하세요 (`git push origin feature/amazing-feature`)
-5. [Pull Request를 생성](https://github.com/iloveaired9/mysuperbase/pull/new/main)하세요
+5. [Pull Request를 생성](https://github.com/iloveaired9/mysupabase/pull/new/main)하세요
 
 ### 커밋 메시지 규칙
 - `feat:` - 새로운 기능
@@ -551,9 +551,9 @@ fetch(`${API_BASE}/posts?limit=10&order=likes.desc`)
 
 | 방법 | 링크 |
 |------|------|
-| **🐛 버그 신고** | [GitHub Issues](https://github.com/iloveaired9/mysuperbase/issues) |
-| **💡 기능 제안** | [GitHub Discussions](https://github.com/iloveaired9/mysuperbase/discussions) |
-| **❓ 질문** | [GitHub Discussions - Q&A](https://github.com/iloveaired9/mysuperbase/discussions/categories/q-a) |
+| **🐛 버그 신고** | [GitHub Issues](https://github.com/iloveaired9/mysupabase/issues) |
+| **💡 기능 제안** | [GitHub Discussions](https://github.com/iloveaired9/mysupabase/discussions) |
+| **❓ 질문** | [GitHub Discussions - Q&A](https://github.com/iloveaired9/mysupabase/discussions/categories/q-a) |
 
 ---
 
@@ -581,4 +581,4 @@ fetch(`${API_BASE}/posts?limit=10&order=likes.desc`)
 **Happy coding! 🎉**
 
 마지막 업데이트: 2026-04-04
-GitHub: https://github.com/iloveaired9/mysuperbase
+GitHub: https://github.com/iloveaired9/mysupabase
