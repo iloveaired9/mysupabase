@@ -1,0 +1,383 @@
+/**
+ * UI Components
+ * Reusable UI utilities for rendering components
+ */
+
+class UIComponents {
+  /**
+   * Create and display a toast notification
+   */
+  static showToast(message, type = 'success', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+      <span>${message}</span>
+      <button class="toast-close">&times;</button>
+    `;
+
+    container.appendChild(toast);
+
+    // Close button handler
+    toast.querySelector('.toast-close').addEventListener('click', () => {
+      toast.remove();
+    });
+
+    // Auto-remove after duration
+    setTimeout(() => {
+      toast.remove();
+    }, duration);
+  }
+
+  /**
+   * Create table header row
+   */
+  static createTableHeader(columns) {
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    columns.forEach(column => {
+      const th = document.createElement('th');
+      th.textContent = column;
+      headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    return thead;
+  }
+
+  /**
+   * Create table data row
+   */
+  static createTableRow(columns, data) {
+    const row = document.createElement('tr');
+
+    columns.forEach(column => {
+      const td = document.createElement('td');
+      const value = data[column];
+
+      if (value === null || value === undefined) {
+        td.innerHTML = '<em style="opacity: 0.5;">NULL</em>';
+      } else if (typeof value === 'boolean') {
+        td.innerHTML = `<code>${value ? 'true' : 'false'}</code>`;
+      } else if (typeof value === 'object') {
+        td.innerHTML = `<code>${JSON.stringify(value).substring(0, 50)}...</code>`;
+      } else if (typeof value === 'string' && value.length > 50) {
+        td.textContent = value.substring(0, 50) + '...';
+        td.title = value;
+      } else {
+        td.textContent = value;
+      }
+
+      row.appendChild(td);
+    });
+
+    return row;
+  }
+
+  /**
+   * Create table from data
+   */
+  static createTable(columns, rows) {
+    const table = document.createElement('table');
+
+    // Add header
+    table.appendChild(this.createTableHeader(columns));
+
+    // Add body
+    const tbody = document.createElement('tbody');
+    rows.forEach(row => {
+      tbody.appendChild(this.createTableRow(columns, row));
+    });
+    table.appendChild(tbody);
+
+    return table;
+  }
+
+  /**
+   * Create loading spinner
+   */
+  static createSpinner() {
+    const div = document.createElement('div');
+    div.className = 'loading-spinner';
+    div.textContent = 'Loading';
+    return div;
+  }
+
+  /**
+   * Show modal dialog
+   */
+  static showModal(title = 'Edit Record') {
+    const modal = document.getElementById('recordModal');
+    if (modal) {
+      document.getElementById('modalTitle').textContent = title;
+      modal.classList.add('active');
+    }
+  }
+
+  /**
+   * Hide modal dialog
+   */
+  static hideModal() {
+    const modal = document.getElementById('recordModal');
+    if (modal) {
+      modal.classList.remove('active');
+      const form = document.getElementById('recordForm');
+      if (form) {
+        form.innerHTML = '';
+      }
+    }
+  }
+
+  /**
+   * Create pagination controls
+   */
+  static createPaginationControls(currentPage, totalPages, onPageChange) {
+    const controls = document.createElement('div');
+    controls.className = 'pagination-controls';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'btn btn-secondary';
+    prevBtn.textContent = '← Previous';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => onPageChange(currentPage - 1));
+
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+    pageInfo.style.color = 'var(--text-secondary-color)';
+    pageInfo.style.fontSize = 'var(--font-size-sm)';
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn btn-secondary';
+    nextBtn.textContent = 'Next →';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => onPageChange(currentPage + 1));
+
+    controls.appendChild(prevBtn);
+    controls.appendChild(pageInfo);
+    controls.appendChild(nextBtn);
+
+    return controls;
+  }
+
+  /**
+   * Create dynamic form from schema
+   */
+  static createFormFromSchema(columns, data = {}) {
+    const form = document.createElement('form');
+    form.className = 'modal-form';
+
+    columns.forEach(column => {
+      if (column.isPrimaryKey) return; // Skip primary keys
+
+      const group = document.createElement('div');
+      group.className = 'form-group';
+
+      const label = document.createElement('label');
+      label.textContent = column.name;
+      label.htmlFor = column.name;
+
+      let input;
+
+      // Create input based on column type
+      switch (column.type.toLowerCase()) {
+        case 'boolean':
+          input = document.createElement('input');
+          input.type = 'checkbox';
+          input.id = column.name;
+          input.name = column.name;
+          if (data[column.name]) {
+            input.checked = true;
+          }
+          break;
+
+        case 'integer':
+        case 'bigint':
+        case 'smallint':
+          input = document.createElement('input');
+          input.type = 'number';
+          input.id = column.name;
+          input.name = column.name;
+          if (data[column.name] !== undefined) {
+            input.value = data[column.name];
+          }
+          break;
+
+        case 'numeric':
+        case 'decimal':
+        case 'double precision':
+          input = document.createElement('input');
+          input.type = 'number';
+          input.step = '0.01';
+          input.id = column.name;
+          input.name = column.name;
+          if (data[column.name] !== undefined) {
+            input.value = data[column.name];
+          }
+          break;
+
+        case 'timestamp':
+        case 'timestamp without time zone':
+        case 'timestamp with time zone':
+          input = document.createElement('input');
+          input.type = 'datetime-local';
+          input.id = column.name;
+          input.name = column.name;
+          if (data[column.name]) {
+            input.value = new Date(data[column.name]).toISOString().slice(0, 16);
+          }
+          break;
+
+        case 'date':
+          input = document.createElement('input');
+          input.type = 'date';
+          input.id = column.name;
+          input.name = column.name;
+          if (data[column.name]) {
+            input.value = data[column.name];
+          }
+          break;
+
+        case 'text':
+          input = document.createElement('textarea');
+          input.id = column.name;
+          input.name = column.name;
+          if (data[column.name]) {
+            input.value = data[column.name];
+          }
+          break;
+
+        default:
+          input = document.createElement('input');
+          input.type = 'text';
+          input.id = column.name;
+          input.name = column.name;
+          if (data[column.name]) {
+            input.value = data[column.name];
+          }
+          if (column.type.startsWith('varchar')) {
+            const match = column.type.match(/\((\d+)\)/);
+            if (match) {
+              input.maxLength = match[1];
+            }
+          }
+      }
+
+      group.appendChild(label);
+      group.appendChild(input);
+      form.appendChild(group);
+    });
+
+    return form;
+  }
+
+  /**
+   * Create schema item display
+   */
+  static createSchemaItem(column) {
+    const item = document.createElement('div');
+    item.className = 'schema-item';
+
+    const header = document.createElement('div');
+    header.className = 'schema-item-header';
+
+    const name = document.createElement('div');
+    name.className = 'column-name';
+    name.textContent = column.name;
+
+    const type = document.createElement('div');
+    type.className = 'column-type';
+    type.textContent = column.type;
+
+    const badge = document.createElement('span');
+    badge.style.marginLeft = 'auto';
+    if (column.isPrimaryKey) {
+      badge.innerHTML = '<span class="status-badge" style="background-color: rgba(102, 126, 234, 0.2); color: var(--primary-color);">PK</span>';
+    }
+
+    header.appendChild(name);
+    header.appendChild(type);
+    if (column.isPrimaryKey) {
+      header.appendChild(badge);
+    }
+
+    const properties = document.createElement('div');
+    properties.className = 'column-properties';
+
+    const nullableProp = document.createElement('div');
+    nullableProp.className = 'property';
+    nullableProp.innerHTML = `
+      <span class="property-label">Nullable</span>
+      <span class="property-value">${column.nullable ? 'Yes' : 'No'}</span>
+    `;
+
+    const defaultProp = document.createElement('div');
+    defaultProp.className = 'property';
+    defaultProp.innerHTML = `
+      <span class="property-label">Default</span>
+      <span class="property-value">${column.default || 'None'}</span>
+    `;
+
+    properties.appendChild(nullableProp);
+    properties.appendChild(defaultProp);
+
+    item.appendChild(header);
+    item.appendChild(properties);
+
+    return item;
+  }
+
+  /**
+   * Create info box
+   */
+  static createInfoBox(message, type = 'info') {
+    const box = document.createElement('div');
+    box.className = `info-box ${type}`;
+
+    const icon = document.createElement('div');
+    icon.className = 'info-box-icon';
+    icon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+
+    const content = document.createElement('div');
+    content.className = 'info-box-content';
+    content.innerHTML = `<div class="info-box-message">${message}</div>`;
+
+    box.appendChild(icon);
+    box.appendChild(content);
+
+    return box;
+  }
+
+  /**
+   * Format value for display
+   */
+  static formatValue(value) {
+    if (value === null || value === undefined) {
+      return 'NULL';
+    }
+    if (typeof value === 'boolean') {
+      return value ? 'true' : 'false';
+    }
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+    return String(value);
+  }
+
+  /**
+   * Safely copy text to clipboard
+   */
+  static async copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      this.showToast('Copied to clipboard', 'success', 2000);
+      return true;
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      this.showToast('Failed to copy', 'error');
+      return false;
+    }
+  }
+}

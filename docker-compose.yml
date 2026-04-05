@@ -98,6 +98,21 @@ services:
       - supabase-net
     restart: unless-stopped
 
+  # mysupabase Console - Firebase Console 스타일 DB 관리 웹 UI
+  console:
+    container_name: supabase-console
+    image: nginx:alpine
+    ports:
+      - "5055:80"
+    volumes:
+      # Console 정적 파일 제공
+      - ./app/console:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    networks:
+      - supabase-net
+    restart: unless-stopped
+
   # Backend API 서버 (Node.js Express)
   backend:
     container_name: supabase-backend

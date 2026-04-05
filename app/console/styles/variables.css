@@ -1,0 +1,146 @@
+/**
+ * CSS Variables
+ * Color palette, fonts, and spacing definitions
+ */
+
+:root {
+  /* ==================== Colors ==================== */
+
+  /* Primary Colors */
+  --primary-color: #667eea;
+  --primary-dark: #5568d3;
+  --primary-light: #8b9ef5;
+
+  /* Secondary Colors */
+  --secondary-color: #4ecdc4;
+  --secondary-dark: #45b9af;
+
+  /* Status Colors */
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --info-color: #2196f3;
+
+  /* Neutral Colors - Light Mode */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e0e0e0;
+  --neutral-300: #d0d0d0;
+  --neutral-400: #bdbdbd;
+  --neutral-500: #9e9e9e;
+  --neutral-600: #757575;
+  --neutral-700: #616161;
+  --neutral-800: #424242;
+  --neutral-900: #212121;
+
+  /* Dark Mode Colors */
+  --dark-bg: #1e1e1e;
+  --dark-surface: #2d2d2d;
+  --dark-surface-alt: #3a3a3a;
+  --dark-text: #e0e0e0;
+  --dark-text-secondary: #b0b0b0;
+
+  /* Light Mode Colors */
+  --light-bg: #ffffff;
+  --light-surface: #f8f9fa;
+  --light-surface-alt: #f0f0f0;
+  --light-text: #212121;
+  --light-text-secondary: #666666;
+
+  /* ==================== Shadows ==================== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.2);
+
+  /* ==================== Typography ==================== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Monaco', 'Courier New', monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ==================== Spacing ==================== */
+  --spacing-0: 0;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 2.5rem;
+  --spacing-3xl: 3rem;
+
+  /* ==================== Border Radius ==================== */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* ==================== Transitions ==================== */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+
+  /* ==================== Z-Index ==================== */
+  --z-dropdown: 100;
+  --z-modal: 1000;
+  --z-toast: 1100;
+
+  /* ==================== Layout ==================== */
+  --navbar-height: 60px;
+  --sidebar-width: 250px;
+  --sidebar-width-sm: 200px;
+
+  /* ==================== Breakpoints ==================== */
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ==================== Content Defaults ==================== */
+  --bg-color: var(--light-bg);
+  --surface-color: var(--light-surface);
+  --surface-alt-color: var(--light-surface-alt);
+  --text-color: var(--light-text);
+  --text-secondary-color: var(--light-text-secondary);
+  --border-color: var(--neutral-200);
+}
+
+/* ==================== Dark Theme ==================== */
+[data-theme="dark"] {
+  --bg-color: var(--dark-bg);
+  --surface-color: var(--dark-surface);
+  --surface-alt-color: var(--dark-surface-alt);
+  --text-color: var(--dark-text);
+  --text-secondary-color: var(--dark-text-secondary);
+  --border-color: #404040;
+}
+
+/* ==================== Light Theme (Explicit) ==================== */
+[data-theme="light"] {
+  --bg-color: var(--light-bg);
+  --surface-color: var(--light-surface);
+  --surface-alt-color: var(--light-surface-alt);
+  --text-color: var(--light-text);
+  --text-secondary-color: var(--light-text-secondary);
+  --border-color: var(--neutral-200);
+}

@@ -381,6 +381,253 @@ app.get('/', (req, res) => {
 // 7. 에러 핸들링
 // ============================================
 
+// ============================================
+// 6. Database 관리 API (콘솔용)
+// ============================================
+
+/**
+ * GET /api/db/tables
+ * 모든 테이블 목록 조회 (메타데이터 포함)
+ */
+app.get('/api/db/tables', async (req, res) => {
+    try {
+        const query = `
+            SELECT
+                t.table_name,
+                n_live_tup as row_count,
+                (SELECT COUNT(*) FROM information_schema.columns WHERE table_name = t.table_name) as column_count
+            FROM pg_stat_user_tables st
+            FULL OUTER JOIN information_schema.tables t ON st.relname = t.table_name
+            WHERE t.table_schema = 'public'
+            ORDER BY t.table_name
+        `;
+
+        const result = await pool.query(query);
+
+        res.json({
+            success: true,
+            data: result.rows.map(table => ({
+                name: table.table_name,
+                rowCount: parseInt(table.row_count) || 0,
+                columnCount: parseInt(table.column_count) || 0,
+                lastModified: new Date().toISOString()
+            }))
+        });
+
+    } catch (error) {
+        console.error('❌ 에러:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch tables'
+        });
+    }
+});
+
+/**
+ * GET /api/db/tables/:tableName/schema
+ * 특정 테이블의 스키마 조회 (컬럼, 타입, 제약조건)
+ */
+app.get('/api/db/tables/:tableName/schema', async (req, res) => {
+    try {
+        const { tableName } = req.params;
+
+        // 테이블명 검증 (SQL injection 방지)
+        if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid table name'
+            });
+        }
+
+        // 테이블 존재 확인
+        const tableCheck = await pool.query(
+            `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = $1`,
+            [tableName]
+        );
+
+        if (tableCheck.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: `Table '${tableName}' not found`
+            });
+        }
+
+        const query = `
+            SELECT
+                c.column_name,
+                c.data_type,
+                c.is_nullable,
+                c.column_default,
+                tc.constraint_type
+            FROM information_schema.columns c
+            LEFT JOIN information_schema.constraint_column_usage ccu
+                ON c.table_name = ccu.table_name AND c.column_name = ccu.column_name
+            LEFT JOIN information_schema.table_constraints tc
+                ON ccu.constraint_name = tc.constraint_name
+            WHERE c.table_schema = 'public' AND c.table_name = $1
+            ORDER BY c.ordinal_position
+        `;
+
+        const result = await pool.query(query, [tableName]);
+
+        res.json({
+            success: true,
+            data: {
+                tableName,
+                columns: result.rows.map(col => ({
+                    name: col.column_name,
+                    type: col.data_type,
+                    nullable: col.is_nullable === 'YES',
+                    default: col.column_default,
+                    isPrimaryKey: col.constraint_type === 'PRIMARY KEY'
+                }))
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ 에러:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch table schema'
+        });
+    }
+});
+
+/**
+ * GET /api/db/tables/:tableName/records
+ * 테이블 레코드 조회 (페이지네이션)
+ */
+app.get('/api/db/tables/:tableName/records', async (req, res) => {
+    try {
+        const { tableName } = req.params;
+        const { page = 1, limit = 10 } = req.query;
+
+        // 테이블명 검증
+        if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid table name'
+            });
+        }
+
+        // 전체 개수
+        const countResult = await pool.query(`SELECT COUNT(*) as count FROM ${tableName}`);
+        const total = parseInt(countResult.rows[0].count);
+
+        // 페이지네이션
+        const offset = (parseInt(page) - 1) * parseInt(limit);
+        const query = `SELECT * FROM ${tableName} LIMIT $1 OFFSET $2`;
+        const result = await pool.query(query, [parseInt(limit), offset]);
+
+        res.json({
+            success: true,
+            data: result.rows,
+            pagination: {
+                page: parseInt(page),
+                limit: parseInt(limit),
+                total: total,
+                pages: Math.ceil(total / parseInt(limit))
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ 에러:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch records'
+        });
+    }
+});
+
+/**
+ * POST /api/db/tables/:tableName/records
+ * 테이블에 새 레코드 추가
+ */
+app.post('/api/db/tables/:tableName/records', async (req, res) => {
+    try {
+        const { tableName } = req.params;
+        const data = req.body;
+
+        // 테이블명 검증
+        if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid table name'
+            });
+        }
+
+        // 빈 데이터 확인
+        if (!data || Object.keys(data).length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'No data provided'
+            });
+        }
+
+        // 컬럼명과 값 준비
+        const columns = Object.keys(data);
+        const values = Object.values(data);
+        const placeholders = columns.map((_, i) => `$${i + 1}`).join(', ');
+        const columnNames = columns.join(', ');
+
+        const query = `INSERT INTO ${tableName} (${columnNames}) VALUES (${placeholders}) RETURNING *`;
+        const result = await pool.query(query, values);
+
+        res.json({
+            success: true,
+            data: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error('❌ 에러:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to insert record'
+        });
+    }
+});
+
+/**
+ * POST /api/db/query
+ * SELECT 쿼리 실행 (읽기 전용)
+ */
+app.post('/api/db/query', async (req, res) => {
+    try {
+        const { query } = req.body;
+
+        if (!query || !query.trim()) {
+            return res.status(400).json({
+                success: false,
+                error: 'No query provided'
+            });
+        }
+
+        // SELECT 쿼리만 허용 (안전성)
+        const trimmedQuery = query.trim().toUpperCase();
+        if (!trimmedQuery.startsWith('SELECT')) {
+            return res.status(400).json({
+                success: false,
+                error: 'Only SELECT queries are allowed'
+            });
+        }
+
+        const result = await pool.query(query);
+
+        res.json({
+            success: true,
+            data: result.rows,
+            rowCount: result.rowCount
+        });
+
+    } catch (error) {
+        console.error('❌ 에러:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Query execution failed'
+        });
+    }
+});
+
 /**
  * 404 Not Found
  */
