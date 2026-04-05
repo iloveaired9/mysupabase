@@ -255,6 +255,46 @@ Node.js Express 기반 Backend API 서버 가이드:
 - 문제 해결 (연결 실패, 포트 충돌 등)
 - PostgREST vs Backend API 비교
 
+### 💾 mysupabase Console 배포 가이드
+**`docs/CONSOLE_DEPLOYMENT_GUIDE.md`**
+
+Firebase Console 스타일 Database Management UI 배포:
+- 로컬 Docker Compose 배포 (단계별)
+- AWS EC2 배포 및 설정
+- Console 기능 상세 가이드 (테이블, 스키마, 쿼리, 설정)
+- API 엔드포인트 검증 (curl 예제)
+- 보안 그룹 규칙 설정
+- 자동 시작 설정 (systemd)
+- 기능 검증 체크리스트
+- 10가지 문제 해결 시나리오
+- 성능 최적화 전략
+
+### 💾 mysupabase Console 아키텍처 가이드
+**`docs/CONSOLE_ARCHITECTURE.md`**
+
+Console 개발자 및 기여자를 위한 아키텍처 문서:
+- Vanilla JavaScript 모듈식 설계
+- 6개 JavaScript 모듈 상세 설명 (api-client, theme-manager 등)
+- 4개 CSS 파일 계층 구조
+- Light/Dark 테마 구현
+- 데이터 흐름 다이어그램
+- 기능 확장 가이드 (UI 컴포넌트, API 엔드포인트, 새 탭 추가)
+- 성능 최적화 팁
+- 디버깅 기법
+- 기여 가이드
+
+### 💾 mysupabase Console 빠른 참조
+**`docs/CONSOLE_QUICK_REFERENCE.md`**
+
+콘솔 사용자를 위한 빠른 참조 가이드:
+- 10초 빠른 시작 가이드
+- 주요 작업 (데이터 조회, 레코드 추가, 쿼리 실행)
+- curl 예제를 통한 API 사용법
+- FAQ 및 문제 해결
+- 키보드 단축키
+- 포트 정리
+- 백업 및 내보내기
+
 ---
 
 ## 🎨 API 엔드포인트
