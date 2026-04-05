@@ -91,6 +91,8 @@ services:
     volumes:
       # Admin Dashboard HTML 파일 제공
       - ./app/admin:/usr/share/nginx/html:ro
+      # nginx 설정 파일
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - supabase-net
     restart: unless-stopped
