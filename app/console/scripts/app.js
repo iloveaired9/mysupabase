@@ -271,6 +271,11 @@ class ConsoleApp {
               UIComponents.createInfoBox(`✅ Inserted test record into ${tableName}`, 'success')
             );
             UIComponents.showToast('Test record created', 'success');
+
+            // Update left menu row count
+            if (tableManager) {
+              await tableManager.loadTableList();
+            }
           } catch (error) {
             crudResultsDiv.innerHTML = '';
             crudResultsDiv.appendChild(
@@ -450,6 +455,11 @@ class ConsoleApp {
               )
             );
             UIComponents.showToast(`Record #${recordId} deleted`, 'success');
+
+            // Update left menu row count
+            if (tableManager) {
+              await tableManager.loadTableList();
+            }
           } catch (error) {
             crudResultsDiv.innerHTML = '';
             crudResultsDiv.appendChild(
