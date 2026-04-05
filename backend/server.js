@@ -391,27 +391,48 @@ app.get('/', (req, res) => {
  */
 app.get('/api/db/tables', async (req, res) => {
     try {
-        const query = `
+        // 1. 모든 테이블 정보 조회
+        const tableQuery = `
             SELECT
                 t.table_name,
-                n_live_tup as row_count,
                 (SELECT COUNT(*) FROM information_schema.columns WHERE table_name = t.table_name) as column_count
-            FROM pg_stat_user_tables st
-            FULL OUTER JOIN information_schema.tables t ON st.relname = t.table_name
+            FROM information_schema.tables t
             WHERE t.table_schema = 'public'
             ORDER BY t.table_name
         `;
 
-        const result = await pool.query(query);
+        const tableResult = await pool.query(tableQuery);
+        const tables = tableResult.rows;
+
+        // 2. 각 테이블의 정확한 행 개수 조회
+        const tablesWithCounts = await Promise.all(
+            tables.map(async (table) => {
+                try {
+                    const countResult = await pool.query(
+                        `SELECT COUNT(*)::integer as count FROM "${table.table_name}"`
+                    );
+                    return {
+                        name: table.table_name,
+                        rowCount: countResult.rows[0].count || 0,
+                        columnCount: parseInt(table.column_count) || 0,
+                        lastModified: new Date().toISOString()
+                    };
+                } catch (err) {
+                    // 테이블 접근 실패 시 0으로 처리
+                    console.warn(`⚠️ Failed to count rows in ${table.table_name}:`, err.message);
+                    return {
+                        name: table.table_name,
+                        rowCount: 0,
+                        columnCount: parseInt(table.column_count) || 0,
+                        lastModified: new Date().toISOString()
+                    };
+                }
+            })
+        );
 
         res.json({
             success: true,
-            data: result.rows.map(table => ({
-                name: table.table_name,
-                rowCount: parseInt(table.row_count) || 0,
-                columnCount: parseInt(table.column_count) || 0,
-                lastModified: new Date().toISOString()
-            }))
+            data: tablesWithCounts
         });
 
     } catch (error) {
