@@ -1,6 +1,12 @@
 # 🌟 커뮤니티 인기글 모아보기 (Community Hot Posts Aggregator)
 
+[![GitHub](https://img.shields.io/badge/GitHub-iloveaired9%2Fmysuperbase-blue?logo=github)](https://github.com/iloveaired9/mysuperbase)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)](docker-compose.yml)
+
 여러 온라인 커뮤니티의 인기글을 한 곳에서 모아볼 수 있는 **PostgREST 기반 API** 프로젝트입니다.
+
+**📍 GitHub Repository**: https://github.com/iloveaired9/mysuperbase
 
 ## 📋 프로젝트 개요
 
@@ -385,17 +391,29 @@ POSTGREST_PORT=3002
 
 ---
 
-## 📚 학습 자료
+## 📚 문서 및 학습 자료
 
-### 기초 개념
+### 📖 프로젝트 문서
+- **[마스터 README](README.md)** - 프로젝트 전체 개요 (이 파일)
+- **[API 가이드](docs/API_GUIDE.md)** - 상세한 API 사용 방법
+- **[API 스펙](docs/swagger.json)** - OpenAPI 3.0 정의
+- **[Step별 가이드](app/step1/README.md)** - 단계별 학습
+
+### 🔗 GitHub 페이지
+- **[Issues](https://github.com/iloveaired9/mysuperbase/issues)** - 버그 신고 및 기능 요청
+- **[Discussions](https://github.com/iloveaired9/mysuperbase/discussions)** - 질문 및 토론
+- **[Wiki](https://github.com/iloveaired9/mysuperbase/wiki)** - 추가 문서
+
+### 📚 기초 개념
 - **PostgREST**: PostgreSQL 스키마 기반 자동 API 생성
 - **OpenAPI**: API 문서 표준
 - **Docker**: 컨테이너 기반 개발 환경
 
-### 외부 자료
+### 🌐 외부 자료
 - [PostgREST 공식 문서](https://postgrest.org)
 - [Swagger UI 가이드](https://swagger.io/tools/swagger-ui/)
 - [OpenAPI 3.0 스펙](https://spec.openapis.org/oas/v3.0.0)
+- [Docker 공식 문서](https://docs.docker.com/)
 
 ---
 
@@ -434,12 +452,68 @@ fetch(`${API_BASE}/posts?limit=10&order=likes.desc`)
 
 ---
 
+## 🤝 기여하기
+
+이 프로젝트에 기여하고 싶으신가요?
+
+1. [저장소를 Fork](https://github.com/iloveaired9/mysuperbase/fork)하세요
+2. 새로운 브랜치를 만드세요 (`git checkout -b feature/amazing-feature`)
+3. 변경사항을 Commit하세요 (`git commit -m 'feat: Add amazing feature'`)
+4. 브랜치에 Push하세요 (`git push origin feature/amazing-feature`)
+5. [Pull Request를 생성](https://github.com/iloveaired9/mysuperbase/pull/new/main)하세요
+
+### 커밋 메시지 규칙
+- `feat:` - 새로운 기능
+- `fix:` - 버그 수정
+- `docs:` - 문서 변경
+- `style:` - 코드 포맷팅 (기능 변화 없음)
+- `refactor:` - 코드 리팩토링
+- `test:` - 테스트 추가/수정
+- `chore:` - 빌드/의존성 관련
+
+---
+
 ## 📄 라이선스
 
-이 프로젝트는 자유롭게 사용할 수 있습니다.
+이 프로젝트는 **MIT 라이선스** 하에 있습니다.
+자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+
+---
+
+## 📞 연락처 및 지원
+
+### 도움이 필요하신가요?
+
+| 방법 | 링크 |
+|------|------|
+| **🐛 버그 신고** | [GitHub Issues](https://github.com/iloveaired9/mysuperbase/issues) |
+| **💡 기능 제안** | [GitHub Discussions](https://github.com/iloveaired9/mysuperbase/discussions) |
+| **❓ 질문** | [GitHub Discussions - Q&A](https://github.com/iloveaired9/mysuperbase/discussions/categories/q-a) |
+
+---
+
+## 📊 프로젝트 통계
+
+- **주요 언어**: SQL, JavaScript, HTML/CSS
+- **데이터베이스**: PostgreSQL
+- **API 프레임워크**: PostgREST
+- **문서화**: OpenAPI 3.0 + Swagger UI
+- **컨테이너화**: Docker Compose
+
+---
+
+## 🚀 앞으로의 계획
+
+- [ ] 사용자 인증 시스템 추가
+- [ ] 실시간 업데이트 (WebSocket)
+- [ ] 고급 검색 기능
+- [ ] 데이터 내보내기 (CSV, JSON)
+- [ ] 분석 대시보드
+- [ ] 모바일 앱
 
 ---
 
 **Happy coding! 🎉**
 
 마지막 업데이트: 2026-04-04
+GitHub: https://github.com/iloveaired9/mysuperbase
